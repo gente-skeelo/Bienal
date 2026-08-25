@@ -2,12 +2,20 @@
   "name": "bienal",
   "version": "0.1.0",
   "private": true,
-  "description": "Projeto Bienal - Skeelo",
+  "description": "API da programacao da Bienal - Skeelo",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "migrar": "node src/migrar.js",
+    "seed": "node src/seed.js",
+    "teste:api": "node testes/api.test.js"
   },
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "pg": "^8.23.0"
   }
 }
