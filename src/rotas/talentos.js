@@ -4,20 +4,11 @@
 const express = require('express');
 const { query } = require('../db');
 const { validarTalento } = require('../validacao');
+const { exigirChaveAdmin } = require('../seguranca');
 
 const router = express.Router();
 
 const asy = (fn) => (req, res, next) => fn(req, res, next).catch(next);
-
-// A listagem expoe dados pessoais. Com CHAVE_ADMIN definida no ambiente, so o
-// time de People acessa (Authorization: Bearer <chave>); sem ela, fica aberta
-// como o resto da API - nao use assim em producao.
-function exigirChaveAdmin(req, res, next) {
-  const chave = process.env.CHAVE_ADMIN;
-  if (!chave) return next();
-  if (req.get('Authorization') === `Bearer ${chave}`) return next();
-  res.status(401).json({ erro: 'Informe a chave de acesso: Authorization: Bearer <CHAVE_ADMIN>.' });
-}
 
 // POST /api/talentos - inscricao vinda do app.
 // Quem se inscreve de novo com o mesmo e-mail atualiza o proprio cadastro.

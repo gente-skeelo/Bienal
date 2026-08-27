@@ -4,10 +4,17 @@
 const express = require('express');
 const { query } = require('../db');
 const { validarHistoria, TERRITORIOS } = require('../validacao');
+const { exigirChaveAdmin } = require('../seguranca');
 
 const router = express.Router();
 
 const asy = (fn) => (req, res, next) => fn(req, res, next).catch(next);
+
+// Leitura e publica (o app monta as estantes com ela); escrita e do painel.
+router.use((req, res, next) => {
+  if (req.method === 'GET') return next();
+  exigirChaveAdmin(req, res, next);
+});
 
 router.param('id', (req, res, next, id) => {
   if (!/^\d+$/.test(id)) return res.status(404).json({ erro: 'Historia nao encontrada.' });

@@ -2,19 +2,21 @@
    Sem fontes ou assets externos: o estande pode ter rede instavel. */
 
 :root {
-  --fundo: #1c0b3b;
-  --fundo-2: #35156e;
+  --fundo: #06140d;
+  --fundo-2: #0e3b26;
   --texto: #ffffff;
   --texto-suave: rgba(255, 255, 255, 0.78);
   --cartao: rgba(255, 255, 255, 0.08);
   --cartao-borda: rgba(255, 255, 255, 0.16);
-  --acento: #a78bfa; /* roxo Skeelo como cor neutra da experiencia */
+  --acento: #35e58b; /* verde Skeelo como cor base da experiencia */
+  --texto-sobre-acento: #052012;
 }
 
-/* Cada territorio tinge a experiencia a partir do resultado. */
-body[data-territorio='aprender'] { --acento: #4ade80; }
-body[data-territorio='evoluir']  { --acento: #a78bfa; }
-body[data-territorio='imaginar'] { --acento: #fb923c; }
+/* Cada territorio tinge a experiencia a partir do resultado, dentro da familia
+   verde da marca. */
+body[data-territorio='aprender'] { --acento: #35e58b; }
+body[data-territorio='evoluir']  { --acento: #2dd4bf; }
+body[data-territorio='imaginar'] { --acento: #a3e635; }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -117,7 +119,7 @@ h3 { font-size: 1rem; margin-top: 0.75rem; color: var(--texto-suave); text-trans
 }
 .botao:active { transform: scale(0.98); }
 
-.botao.principal { background: var(--acento); color: #180a33; }
+.botao.principal { background: var(--acento); color: var(--texto-sobre-acento); }
 .botao.secundario {
   background: transparent;
   color: var(--texto);

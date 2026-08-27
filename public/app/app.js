@@ -3,9 +3,16 @@
 // Skeelers -> trajetorias reais -> Employer Branding -> Estante de Talentos -> Urna.
 // Sem login; dados so entram quando a pessoa pede para entrar na Estante de Talentos.
 
-// Ajuste para a pagina de vagas do Skeelo. Vazio = o botao de oportunidades
-// nao aparece (evita link quebrado no estande).
-const URL_OPORTUNIDADES = '';
+// Link da pagina de vagas do Skeelo, ajustavel pelo painel /admin
+// (Configuracoes). Vazio = o botao de oportunidades nao aparece (evita link
+// quebrado no estande).
+let URL_OPORTUNIDADES = '';
+fetch('/api/config')
+  .then((resposta) => resposta.json())
+  .then((config) => {
+    URL_OPORTUNIDADES = config.url_oportunidades || '';
+  })
+  .catch(() => {});
 
 const TERRITORIOS = {
   aprender: {
