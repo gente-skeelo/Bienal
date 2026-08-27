@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1c0b3b">
+  <title>Próximo Capítulo — Skeelo na Bienal 2026</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
+  <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+  <main id="telas">
+
+    <!-- TELA 01 | Entrada -->
+    <section class="tela" id="tela-entrada">
+      <div class="miolo">
+        <p class="marca">Skeelo <span>·</span> Bienal 2026</p>
+        <h1>Qual é o seu próximo capítulo profissional?</h1>
+        <p class="apoio">Aprender algo novo? Evoluir para um novo desafio? Imaginar um caminho diferente?</p>
+        <p class="apoio">Descubra em menos de 1 minuto e conheça histórias de quem constrói sua trajetória no Skeelo.</p>
+      </div>
+      <div class="acoes">
+        <button class="botao principal" id="btn-comecar">Descobrir meu próximo capítulo</button>
+        <p class="nota">Sem cadastro. A história te acompanha além da página.</p>
+      </div>
+    </section>
+
+    <!-- TELAS 02–08 | Quiz -->
+    <section class="tela" id="tela-quiz" hidden>
+      <header class="quiz-topo">
+        <div class="progresso" aria-hidden="true"><div class="progresso-barra" id="quiz-progresso"></div></div>
+        <p class="quiz-passo" id="quiz-passo">1 de 7</p>
+      </header>
+      <div class="miolo">
+        <h2 id="quiz-pergunta"></h2>
+        <div class="alternativas" id="quiz-alternativas"></div>
+      </div>
+    </section>
+
+    <!-- TELA 09 | Reveal -->
+    <section class="tela centro" id="tela-reveal" hidden>
+      <div class="miolo">
+        <div class="livro-animado" aria-hidden="true">📖</div>
+        <h2>Tem um próximo capítulo esperando por você...</h2>
+      </div>
+    </section>
+
+    <!-- TELA 10 | Resultado -->
+    <section class="tela" id="tela-resultado" hidden>
+      <div class="miolo">
+        <p class="rotulo">Seu próximo capítulo é</p>
+        <h1 class="territorio-nome" id="resultado-territorio"></h1>
+        <h2 id="resultado-titulo"></h2>
+        <p class="apoio" id="resultado-texto"></p>
+        <p class="apoio">No Skeelo, essa história também acontece.</p>
+        <blockquote class="mensagem" id="resultado-mensagem"></blockquote>
+      </div>
+      <div class="acoes">
+        <button class="botao principal" id="btn-estante">Conhecer essas histórias</button>
+      </div>
+    </section>
+
+    <!-- TELA 11 | Estante dos Skeelers -->
+    <section class="tela" id="tela-estante" hidden>
+      <div class="miolo">
+        <p class="rotulo">Sua Estante dos Skeelers</p>
+        <h2 class="territorio-nome" id="estante-territorio"></h2>
+        <p class="apoio" id="estante-descricao"></p>
+        <div class="cartoes" id="estante-lista"></div>
+      </div>
+      <div class="acoes">
+        <button class="botao principal" id="btn-eb">Continuar</button>
+      </div>
+    </section>
+
+    <!-- TELA 12 | Trajetória do Skeeler -->
+    <section class="tela" id="tela-trajetoria" hidden>
+      <div class="miolo">
+        <p class="rotulo">Conheça quem viveu esse capítulo</p>
+        <h2 id="trajetoria-nome"></h2>
+        <p class="apoio" id="trajetoria-cargo"></p>
+        <h3>A trajetória até aqui</h3>
+        <ol class="linha-tempo" id="trajetoria-linha"></ol>
+        <h3>A história que acompanhou esse caminho</h3>
+        <div class="cartao">
+          <p class="cartao-livro" id="trajetoria-livro"></p>
+          <blockquote class="cartao-citacao" id="trajetoria-citacao"></blockquote>
+        </div>
+      </div>
+      <div class="acoes">
+        <a class="botao principal" id="btn-livro" target="_blank" rel="noopener" hidden>Conhecer o livro no Skeelo</a>
+        <button class="botao secundario" id="btn-voltar-estante">Voltar para a estante</button>
+      </div>
+    </section>
+
+    <!-- TELA 13 | Employer Branding -->
+    <section class="tela" id="tela-eb" hidden>
+      <div class="miolo">
+        <h2>Histórias acompanham pessoas.<br>Pessoas constroem histórias.</h2>
+        <p class="apoio">Você conheceu alguns capítulos de quem constrói o Skeelo hoje. No final da experiência você vai ter uma surpresa!</p>
+        <h3 class="pergunta-eb">E qual pode ser o seu próximo capítulo?</h3>
+      </div>
+      <div class="acoes">
+        <a class="botao principal" id="btn-vagas" target="_blank" rel="noopener" hidden>Conhecer oportunidades no Skeelo</a>
+        <button class="botao principal" id="btn-talentos">Fazer parte da Estante de Talentos</button>
+        <button class="botao secundario" id="btn-pular-eb">Concluir a experiência</button>
+      </div>
+    </section>
+
+    <!-- TELA 14 | Estante de Talentos -->
+    <section class="tela" id="tela-talentos" hidden>
+      <div class="miolo">
+        <h2>Talvez a próxima história da nossa estante seja a sua.</h2>
+        <p class="apoio">Conte um pouco sobre sua trajetória e sobre o que gostaria de construir daqui para frente.</p>
+        <form id="form-talentos" novalidate>
+          <label>Nome
+            <input type="text" name="nome" autocomplete="name" required>
+          </label>
+          <label>E-mail
+            <input type="email" name="email" autocomplete="email" inputmode="email" required>
+          </label>
+          <label>Área de interesse
+            <input type="text" name="area_interesse" placeholder="Ex.: Engenharia, Produto, Marketing...">
+          </label>
+          <label>LinkedIn ou currículo (link)
+            <input type="url" name="linkedin" inputmode="url" placeholder="https://linkedin.com/in/...">
+          </label>
+          <label>O que você gostaria de construir daqui para frente?
+            <textarea name="mensagem" rows="3"></textarea>
+          </label>
+          <label class="consentimento">
+            <input type="checkbox" name="consentimento">
+            <span>Autorizo o Skeelo a guardar meus dados e entrar em contato sobre conteúdos e oportunidades de carreira. Posso pedir a remoção quando quiser.</span>
+          </label>
+          <p class="erro" id="talentos-erro" hidden></p>
+          <button class="botao principal" type="submit" id="btn-enviar-talento">Fazer parte da Estante de Talentos</button>
+        </form>
+      </div>
+      <div class="acoes">
+        <button class="botao secundario" id="btn-pular-talentos">Agora não</button>
+      </div>
+    </section>
+
+    <!-- Confirmação da Estante de Talentos -->
+    <section class="tela centro" id="tela-talentos-ok" hidden>
+      <div class="miolo">
+        <div class="livro-animado" aria-hidden="true">✨</div>
+        <h2>Sua história agora faz parte da nossa estante.</h2>
+        <p class="apoio">Vamos continuar essa conversa além da Bienal — fique de olho no seu e-mail.</p>
+      </div>
+      <div class="acoes">
+        <button class="botao principal" id="btn-apos-talentos">Continuar</button>
+      </div>
+    </section>
+
+    <!-- TELA 15 | Urna Além da Página -->
+    <section class="tela centro" id="tela-urna" hidden>
+      <div class="miolo">
+        <h1>Essa história ainda não terminou.</h1>
+        <p class="apoio">Você ganhou uma chance na <strong>Urna Além da Página</strong>.</p>
+        <p class="apoio">Mostre esta tela para um Skeeler no estande e receba seu token.</p>
+        <div class="carimbo">
+          <p class="carimbo-rotulo">Meu próximo capítulo</p>
+          <p class="territorio-nome carimbo-territorio" id="urna-territorio"></p>
+        </div>
+      </div>
+      <div class="acoes">
+        <p class="nota">A história te acompanha além da página.</p>
+        <button class="botao secundario" id="btn-recomecar">Recomeçar experiência</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

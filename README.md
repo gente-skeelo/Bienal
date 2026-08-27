@@ -1,10 +1,15 @@
-# Bienal — API da Programação
+# Bienal — Skeelo
 
-Backend da programação da Bienal: uma API REST em Node + Express com Postgres,
-pronta para rodar no [Railway](https://railway.app).
+Backend da Bienal em Node + Express com Postgres, pronto para rodar no
+[Railway](https://railway.app). Duas frentes no mesmo serviço:
 
-Cada linha da tabela `eventos` é uma atividade da grade — palestra, mesa,
-oficina, sessão de autógrafos.
+- **API da programação** — cada linha da tabela `eventos` é uma atividade da
+  grade: palestra, mesa, oficina, sessão de autógrafos.
+- **App "Próximo Capítulo"** (Bienal 2026) — a experiência mobile de
+  Comunicação Interna + Employer Branding servida em **`/app`**: quiz de 7
+  perguntas → território (**Aprender · Evoluir · Imaginar**) → Estante dos
+  Skeelers com histórias reais de carreira → Estante de Talentos → Urna Além
+  da Página.
 
 ---
 
@@ -118,27 +123,102 @@ direto de um front-end sem configuração extra.
 
 ---
 
+## App "Próximo Capítulo" (Bienal 2026)
+
+A experiência fica em **`/app`** (ex.:
+`https://SUA-URL.up.railway.app/app/`) — é para lá que apontam o QR Code e os
+tablets do estande. Princípios do rascunho: mobile first, sem login, ~1 minuto
+de quiz, 1 pergunta por tela, botões grandes, resultado sem pedir dados e
+captura de dados só com interesse explícito.
+
+O fluxo implementado:
+
+```
+Entrada → Quiz (7 perguntas) → Reveal → Resultado (território)
+→ Estante dos Skeelers (3 livros + 3 histórias + 3 trajetórias)
+→ Trajetória do Skeeler → Employer Branding
+→ Oportunidades / Estante de Talentos → Urna Além da Página
+```
+
+### Conteúdo parametrizável (Estantes dos Skeelers)
+
+As histórias que aparecem no app vêm da tabela `historias` — o `npm run seed`
+insere 9 placeholders (3 por território) e as histórias reais entram depois
+pela API, sem novo deploy:
+
+| Método | Rota | O que faz |
+| --- | --- | --- |
+| `GET` | `/api/historias` | lista as histórias ativas (filtro `?territorio=aprender\|evoluir\|imaginar`; `?todas=true` inclui inativas) |
+| `GET` | `/api/historias/:id` | uma história |
+| `POST` | `/api/historias` | cria história |
+| `PATCH` | `/api/historias/:id` | atualiza só os campos enviados (ex.: `{"ativo": false}` tira do ar) |
+| `DELETE` | `/api/historias/:id` | remove história |
+
+Campos: `territorio` (obrigatório: `aprender`, `evoluir` ou `imaginar`),
+`livro`, `citacao`, `skeeler_nome`, `skeeler_cargo` (obrigatórios), `resumo`
+(mini trajetória em uma linha), `trajetoria` (lista de marcos
+`{"quando": "2022", "marco": "Entrou como Software Engineer"}`), `livro_url`
+(o CTA "Conhecer o livro no Skeelo" só aparece quando há link garantido),
+`ordem` e `ativo`.
+
+### Estante de Talentos
+
+| Método | Rota | O que faz |
+| --- | --- | --- |
+| `POST` | `/api/talentos` | inscrição vinda do app (`nome`, `email` e `consentimento: true` obrigatórios; `area_interesse`, `linkedin`, `mensagem`, `territorio` opcionais) |
+| `GET` | `/api/talentos` | listagem para o time de People |
+
+Reinscrição com o mesmo e-mail atualiza o cadastro em vez de duplicar. A
+listagem expõe dados pessoais: defina **`CHAVE_ADMIN`** no ambiente (ver
+`.env.example`) para exigir `Authorization: Bearer <chave>` — sem a variável a
+rota fica aberta, o que serve só para desenvolvimento.
+
+### Analytics essenciais
+
+O front registra os eventos do rascunho em `POST /api/metricas`
+(`quiz_started`, `quiz_completed`, `territory_result`, `skeeler_story_viewed`,
+`book_clicked`, `careers_clicked`, `talent_pool_clicked`,
+`talent_pool_completed`, `experience_completed`, `token_redeemed`), com
+território, história e uma sessão anônima por visita.
+
+`GET /api/metricas/resumo` devolve a visão agregada: total e sessões únicas
+por evento (o funil quiz → território → história → carreira → Estante de
+Talentos), distribuição de territórios e histórias mais vistas.
+
+### Configuração do front
+
+Em `public/app/app.js`, a constante `URL_OPORTUNIDADES` define o link do botão
+"Conhecer oportunidades no Skeelo". Vazia (padrão), o botão não aparece —
+preencha com a página de vagas antes do evento.
+
+---
+
 ## Estrutura
 
 ```
-server.js              sobe o servidor (aplica o schema antes de escutar)
-src/app.js             rotas gerais, home, /health, tratamento de erro
-src/db.js              conexão com o Postgres (lê DATABASE_URL)
-src/schema.sql         a tabela eventos
-src/migrar.js          aplica o schema.sql
-src/seed.js            insere eventos de exemplo
-src/validacao.js       valida o corpo das requisições
-src/rotas/eventos.js   CRUD de /api/eventos
-testes/api.test.js     testes de integração
+server.js                        sobe o servidor (aplica o schema antes de escutar)
+src/app.js                       rotas gerais, home, /health, tratamento de erro
+src/db.js                        conexão com o Postgres (lê DATABASE_URL)
+src/schema.sql                   tabelas: eventos, historias, talentos, metricas
+src/migrar.js                    aplica o schema.sql
+src/seed.js                      insere eventos e histórias de exemplo
+src/validacao.js                 valida o corpo das requisições
+src/rotas/eventos.js             CRUD de /api/eventos
+src/rotas/historias.js           CRUD de /api/historias (Estantes dos Skeelers)
+src/rotas/talentos.js            /api/talentos (Estante de Talentos)
+src/rotas/metricas.js            /api/metricas (analytics essenciais)
+public/app/                      o app "Próximo Capítulo" (HTML + CSS + JS puros)
+testes/api.test.js               testes de integração da programação
+testes/proximo-capitulo.test.js  testes de integração do app
 ```
 
 ## Testes
 
-Precisam de um Postgres local (os testes limpam a tabela, por isso recusam
+Precisam de um Postgres local (os testes limpam as tabelas, por isso recusam
 rodar contra banco remoto):
 
 ```bash
-DATABASE_URL=postgres://postgres@localhost:5432/bienal_teste npm run teste:api
+DATABASE_URL=postgres://postgres@localhost:5432/bienal_teste npm run teste
 ```
 
 ## Scripts
@@ -148,4 +228,6 @@ DATABASE_URL=postgres://postgres@localhost:5432/bienal_teste npm run teste:api
 | `npm start` | aplica o schema e sobe a API |
 | `npm run migrar` | só aplica o schema |
 | `npm run seed` | insere exemplos (`-- --limpar` apaga antes) |
-| `npm run teste:api` | roda os testes de integração |
+| `npm run teste` | roda todos os testes de integração |
+| `npm run teste:api` | só os testes da programação |
+| `npm run teste:app` | só os testes do app Próximo Capítulo |
