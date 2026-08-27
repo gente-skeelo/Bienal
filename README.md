@@ -131,6 +131,20 @@ tablets do estande. Princípios do rascunho: mobile first, sem login, ~1 minuto
 de quiz, 1 pergunta por tela, botões grandes, resultado sem pedir dados e
 captura de dados só com interesse explícito.
 
+O time ajusta tudo pelo **painel de gestão em `/admin`** — sem mexer em
+código nem fazer deploy:
+
+- **Histórias** — criar, editar, ordenar, ativar/desativar e excluir as
+  histórias das três estantes (com linha do tempo da trajetória);
+- **Talentos** — ver quem entrou na Estante de Talentos e baixar CSV;
+- **Métricas** — o funil da experiência (visitantes únicos por evento),
+  distribuição de territórios e histórias mais vistas;
+- **Configurações** — o link do botão "Conhecer oportunidades no Skeelo"
+  (vazio = botão oculto no app).
+
+Com `CHAVE_ADMIN` definida no ambiente, o painel pede a chave uma vez e a
+guarda no navegador.
+
 O fluxo implementado:
 
 ```
@@ -161,6 +175,9 @@ Campos: `territorio` (obrigatório: `aprender`, `evoluir` ou `imaginar`),
 (o CTA "Conhecer o livro no Skeelo" só aparece quando há link garantido),
 `ordem` e `ativo`.
 
+A leitura é pública (o app monta as estantes com ela); criar, editar e excluir
+exigem `CHAVE_ADMIN` quando a variável está definida.
+
 ### Estante de Talentos
 
 | Método | Rota | O que faz |
@@ -185,11 +202,12 @@ território, história e uma sessão anônima por visita.
 por evento (o funil quiz → território → história → carreira → Estante de
 Talentos), distribuição de territórios e histórias mais vistas.
 
-### Configuração do front
+### Configurações — `/api/config`
 
-Em `public/app/app.js`, a constante `URL_OPORTUNIDADES` define o link do botão
-"Conhecer oportunidades no Skeelo". Vazia (padrão), o botão não aparece —
-preencha com a página de vagas antes do evento.
+`GET /api/config` (público) devolve as configurações que o app usa — hoje,
+`url_oportunidades`, o link do botão "Conhecer oportunidades no Skeelo"
+(vazio = botão oculto). `PATCH /api/config` atualiza (protegido por
+`CHAVE_ADMIN`); o jeito mais fácil é pela aba **Configurações** do `/admin`.
 
 ---
 
@@ -199,15 +217,18 @@ preencha com a página de vagas antes do evento.
 server.js                        sobe o servidor (aplica o schema antes de escutar)
 src/app.js                       rotas gerais, home, /health, tratamento de erro
 src/db.js                        conexão com o Postgres (lê DATABASE_URL)
-src/schema.sql                   tabelas: eventos, historias, talentos, metricas
+src/schema.sql                   tabelas: eventos, historias, talentos, metricas, config
 src/migrar.js                    aplica o schema.sql
 src/seed.js                      insere eventos e histórias de exemplo
 src/validacao.js                 valida o corpo das requisições
+src/seguranca.js                 proteção por CHAVE_ADMIN das rotas de gestão
 src/rotas/eventos.js             CRUD de /api/eventos
 src/rotas/historias.js           CRUD de /api/historias (Estantes dos Skeelers)
 src/rotas/talentos.js            /api/talentos (Estante de Talentos)
 src/rotas/metricas.js            /api/metricas (analytics essenciais)
+src/rotas/config.js              /api/config (configurações ajustáveis pelo painel)
 public/app/                      o app "Próximo Capítulo" (HTML + CSS + JS puros)
+public/admin/                    o painel de gestão em /admin
 testes/api.test.js               testes de integração da programação
 testes/proximo-capitulo.test.js  testes de integração do app
 ```

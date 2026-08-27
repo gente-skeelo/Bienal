@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#06140d">
+  <title>Painel — Próximo Capítulo · Bienal 2026</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛠️</text></svg>">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+  <header class="topo">
+    <div class="topo-titulo">
+      <p class="marca">Skeelo <span>·</span> Bienal 2026</p>
+      <h1>Painel do Próximo Capítulo</h1>
+    </div>
+    <nav class="menu" id="menu">
+      <button class="menu-item ativo" data-secao="historias">Histórias</button>
+      <button class="menu-item" data-secao="talentos">Talentos</button>
+      <button class="menu-item" data-secao="metricas">Métricas</button>
+      <button class="menu-item" data-secao="config">Configurações</button>
+    </nav>
+  </header>
+
+  <!-- Aparece quando a API responde 401 (CHAVE_ADMIN definida no servidor). -->
+  <div class="aviso-chave" id="aviso-chave" hidden>
+    <p>Este painel precisa da chave de acesso (<code>CHAVE_ADMIN</code>).</p>
+    <div class="linha">
+      <input type="password" id="campo-chave" placeholder="Cole a chave aqui" autocomplete="off">
+      <button class="botao principal" id="btn-salvar-chave">Entrar</button>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- ============ HISTÓRIAS ============ -->
+    <section class="secao" id="secao-historias">
+      <div class="barra">
+        <select id="filtro-territorio">
+          <option value="">Todas as estantes</option>
+          <option value="aprender">Aprender</option>
+          <option value="evoluir">Evoluir</option>
+          <option value="imaginar">Imaginar</option>
+        </select>
+        <button class="botao principal" id="btn-nova-historia">+ Nova história</button>
+      </div>
+
+      <form class="painel-form" id="form-historia" hidden>
+        <h2 id="form-historia-titulo">Nova história</h2>
+        <div class="grade">
+          <label>Estante (território)
+            <select name="territorio" required>
+              <option value="aprender">Aprender</option>
+              <option value="evoluir">Evoluir</option>
+              <option value="imaginar">Imaginar</option>
+            </select>
+          </label>
+          <label>Ordem na estante
+            <input type="number" name="ordem" value="0">
+          </label>
+        </div>
+        <label>Livro
+          <input type="text" name="livro" required placeholder="Título do livro no Skeelo">
+        </label>
+        <label>Link do livro no Skeelo (opcional — sem link, o botão não aparece no app)
+          <input type="url" name="livro_url" placeholder="https://...">
+        </label>
+        <label>Citação do Skeeler
+          <textarea name="citacao" rows="2" required placeholder="Esse livro me acompanhou quando..."></textarea>
+        </label>
+        <div class="grade">
+          <label>Nome do Skeeler
+            <input type="text" name="skeeler_nome" required>
+          </label>
+          <label>Cargo
+            <input type="text" name="skeeler_cargo" required>
+          </label>
+        </div>
+        <label>Mini trajetória (uma linha)
+          <input type="text" name="resumo" placeholder="Software Engineer → novos projetos → liderança">
+        </label>
+        <fieldset>
+          <legend>Trajetória (linha do tempo)</legend>
+          <div id="marcos"></div>
+          <button class="botao secundario" type="button" id="btn-add-marco">+ Adicionar marco</button>
+        </fieldset>
+        <label class="linha-check">
+          <input type="checkbox" name="ativo" checked>
+          <span>Ativa (aparece no app)</span>
+        </label>
+        <p class="erro" id="form-historia-erro" hidden></p>
+        <div class="linha">
+          <button class="botao principal" type="submit">Salvar história</button>
+          <button class="botao secundario" type="button" id="btn-cancelar-historia">Cancelar</button>
+        </div>
+      </form>
+
+      <div id="lista-historias" class="cartoes"></div>
+    </section>
+
+    <!-- ============ TALENTOS ============ -->
+    <section class="secao" id="secao-talentos" hidden>
+      <div class="barra">
+        <p id="talentos-total" class="apoio"></p>
+        <button class="botao secundario" id="btn-csv-talentos">Baixar CSV</button>
+      </div>
+      <div class="tabela-rolagem">
+        <table id="tabela-talentos">
+          <thead>
+            <tr><th>Nome</th><th>E-mail</th><th>Área</th><th>Território</th><th>LinkedIn/CV</th><th>Mensagem</th><th>Data</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ MÉTRICAS ============ -->
+    <section class="secao" id="secao-metricas" hidden>
+      <div class="barra">
+        <p class="apoio">Funil da experiência (visitantes únicos por evento)</p>
+        <button class="botao secundario" id="btn-atualizar-metricas">Atualizar</button>
+      </div>
+      <div id="funil" class="funil"></div>
+      <h2>Territórios</h2>
+      <div id="metricas-territorios" class="funil"></div>
+      <h2>Histórias mais vistas</h2>
+      <div id="metricas-historias" class="cartoes"></div>
+    </section>
+
+    <!-- ============ CONFIGURAÇÕES ============ -->
+    <section class="secao" id="secao-config" hidden>
+      <form class="painel-form" id="form-config">
+        <h2>Configurações do app</h2>
+        <label>URL da página de oportunidades (botão "Conhecer oportunidades no Skeelo")
+          <input type="url" name="url_oportunidades" placeholder="https://... (vazio = botão oculto no app)">
+        </label>
+        <p class="erro" id="form-config-erro" hidden></p>
+        <button class="botao principal" type="submit">Salvar configurações</button>
+      </form>
+
+      <div class="painel-form">
+        <h2>Acesso</h2>
+        <p class="apoio">O app dos visitantes fica em <a href="/app/" target="_blank" rel="noopener">/app/</a> — é para lá que o QR Code do estande deve apontar.</p>
+        <p class="apoio">Chave de acesso deste painel: definida pela variável <code>CHAVE_ADMIN</code> no servidor (Railway → Variables). <button class="link" id="btn-trocar-chave" type="button">Trocar a chave salva neste navegador</button></p>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+/* Painel de gestao do "Proximo Capitulo" — mesma familia visual verde do app,
+   com layout utilitario (funciona no notebook do time e no celular). */
+
+:root {
+  --fundo: #06140d;
+  --fundo-2: #0e3b26;
+  --texto: #ffffff;
+  --texto-suave: rgba(255, 255, 255, 0.75);
+  --cartao: rgba(255, 255, 255, 0.07);
+  --cartao-borda: rgba(255, 255, 255, 0.16);
+  --acento: #35e58b;
+  --texto-sobre-acento: #052012;
+  --perigo: #f87171;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+[hidden] { display: none !important; }
+
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--texto);
+  background: var(--fundo);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(120% 60% at 50% 0%, var(--fundo-2), var(--fundo) 70%);
+}
+
+a { color: var(--acento); }
+code { background: var(--cartao); padding: 0.1rem 0.35rem; border-radius: 0.3rem; }
+
+.topo {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.marca { font-weight: 700; }
+.marca span { color: var(--acento); }
+h1 { font-size: 1.5rem; }
+h2 { font-size: 1.1rem; margin: 1.5rem 0 0.75rem; }
+.apoio { color: var(--texto-suave); }
+
+.menu { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.menu-item {
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--cartao-borda);
+  border-radius: 999px;
+  background: var(--cartao);
+  color: var(--texto);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.menu-item.ativo { background: var(--acento); color: var(--texto-sobre-acento); border-color: var(--acento); }
+
+main, .aviso-chave { max-width: 64rem; margin: 0 auto; padding: 1rem 1.5rem 3rem; }
+
+.aviso-chave {
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.aviso-chave .linha { max-width: 28rem; }
+
+.secao { animation: entrar 0.2s ease-out; }
+@keyframes entrar { from { opacity: 0; } to { opacity: 1; } }
+
+.barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+
+.linha { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.linha-check { display: flex; gap: 0.5rem; align-items: center; }
+.linha-check input { width: 1.1rem; height: 1.1rem; accent-color: var(--acento); }
+
+.botao {
+  padding: 0.6rem 1.25rem;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.botao.principal { background: var(--acento); color: var(--texto-sobre-acento); }
+.botao.secundario { background: transparent; color: var(--texto); border: 1px solid var(--cartao-borda); }
+.botao.perigo { background: transparent; color: var(--perigo); border: 1px solid var(--perigo); }
+.botao.mini { padding: 0.35rem 0.9rem; font-size: 0.85rem; }
+
+.link {
+  background: none;
+  border: 0;
+  color: var(--acento);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+input, select, textarea {
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--cartao-borda);
+  border-radius: 0.6rem;
+  background: var(--cartao);
+  color: var(--texto);
+  font: inherit;
+  width: 100%;
+}
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--acento); }
+select option { color: #111; }
+
+label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.9rem; color: var(--texto-suave); }
+
+.erro { color: var(--perigo); }
+
+/* Formularios em painel */
+.painel-form {
+  border: 1px solid var(--cartao-borda);
+  border-radius: 1rem;
+  background: var(--cartao);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin: 1rem 0;
+}
+.painel-form h2 { margin: 0; }
+
+.grade { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+@media (max-width: 40rem) { .grade { grid-template-columns: 1fr; } }
+
+fieldset { border: 1px dashed var(--cartao-borda); border-radius: 0.75rem; padding: 0.9rem; display: flex; flex-direction: column; gap: 0.6rem; }
+legend { padding: 0 0.4rem; font-size: 0.9rem; color: var(--texto-suave); }
+
+.marco-linha { display: grid; grid-template-columns: 6rem 1fr auto; gap: 0.5rem; align-items: center; }
+
+/* Cartoes de historia */
+.cartoes { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.cartao {
+  border: 1px solid var(--cartao-borda);
+  border-radius: 1rem;
+  background: var(--cartao);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.cartao.inativa { opacity: 0.55; }
+
+.cartao-topo { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+.cartao-livro { font-weight: 700; }
+.cartao-detalhe { color: var(--texto-suave); font-size: 0.9rem; }
+
+.etiqueta {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: var(--acento);
+  color: var(--texto-sobre-acento);
+}
+.etiqueta.evoluir { background: #2dd4bf; }
+.etiqueta.imaginar { background: #a3e635; }
+.etiqueta.cinza { background: var(--cartao-borda); color: var(--texto); }
+
+.cartao-acoes { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.4rem; }
+
+/* Tabela de talentos */
+.tabela-rolagem { overflow-x: auto; border: 1px solid var(--cartao-borda); border-radius: 1rem; }
+table { border-collapse: collapse; width: 100%; min-width: 46rem; }
+th, td { text-align: left; padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--cartao-borda); font-size: 0.9rem; }
+th { color: var(--texto-suave); font-weight: 600; white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
+
+/* Metricas */
+.funil { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.funil-linha { display: grid; grid-template-columns: 12rem 1fr 4.5rem; gap: 0.75rem; align-items: center; font-size: 0.9rem; }
+@media (max-width: 40rem) { .funil-linha { grid-template-columns: 8rem 1fr 3.5rem; } }
+.funil-nome { color: var(--texto-suave); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.funil-trilho { background: var(--cartao); border-radius: 999px; height: 1rem; overflow: hidden; }
+.funil-barra { background: var(--acento); height: 100%; border-radius: 999px; }
+.funil-valor { text-align: right; font-weight: 700; }

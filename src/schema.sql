@@ -68,3 +68,14 @@ CREATE TABLE IF NOT EXISTS metricas (
 );
 
 CREATE INDEX IF NOT EXISTS metricas_evento_idx ON metricas (evento, criado_em);
+
+-- Configuracoes ajustaveis pelo painel /admin, sem novo deploy.
+CREATE TABLE IF NOT EXISTS config (
+  chave         TEXT PRIMARY KEY,
+  valor         TEXT NOT NULL DEFAULT '',
+  atualizado_em TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Link do botao "Conhecer oportunidades no Skeelo"; vazio = botao oculto no app.
+INSERT INTO config (chave, valor) VALUES ('url_oportunidades', '')
+ON CONFLICT (chave) DO NOTHING;

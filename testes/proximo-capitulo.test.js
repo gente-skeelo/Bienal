@@ -47,6 +47,7 @@ const HISTORIA = {
 test.before(async () => {
   await migrar();
   await query('TRUNCATE historias, talentos, metricas RESTART IDENTITY');
+  await query(`UPDATE config SET valor = '' WHERE chave = 'url_oportunidades'`);
   servidor = app.listen(0);
   await new Promise((r) => servidor.once('listening', r));
   base = `http://127.0.0.1:${servidor.address().port}`;
@@ -63,6 +64,13 @@ test('GET /app/ serve a experiencia mobile', async () => {
   assert.match(resposta.headers.get('content-type'), /text\/html/);
   const html = await resposta.text();
   assert.ok(html.includes('Qual é o seu próximo capítulo profissional?'));
+});
+
+test('GET /admin/ serve o painel de gestao', async () => {
+  const resposta = await fetch(`${base}/admin/`);
+  assert.equal(resposta.status, 200);
+  const html = await resposta.text();
+  assert.ok(html.includes('Painel do Próximo Capítulo'));
 });
 
 // --- Historias (Estantes dos Skeelers) ---
@@ -185,17 +193,66 @@ test('POST /api/talentos cria e reinscricao com o mesmo e-mail atualiza', async 
   assert.equal(lista.corpo.total, 1);
 });
 
-test('GET /api/talentos respeita a CHAVE_ADMIN quando definida', async () => {
+test('CHAVE_ADMIN protege talentos, mutacoes de historias e config', async () => {
   process.env.CHAVE_ADMIN = 'segredo-de-teste';
+  const autorizacao = { Authorization: 'Bearer segredo-de-teste' };
   try {
     assert.equal((await req('/api/talentos')).status, 401);
-    const autorizado = await req('/api/talentos', {
-      headers: { Authorization: 'Bearer segredo-de-teste' },
-    });
-    assert.equal(autorizado.status, 200);
+    assert.equal((await req('/api/talentos', { headers: autorizacao })).status, 200);
+
+    // Leitura das historias continua publica (o app precisa dela); escrita nao.
+    assert.equal((await req('/api/historias')).status, 200);
+    assert.equal((await req('/api/historias', { method: 'POST', corpo: HISTORIA })).status, 401);
+    const criada = await req('/api/historias', { method: 'POST', corpo: HISTORIA, headers: autorizacao });
+    assert.equal(criada.status, 201);
+    assert.equal(
+      (await req(`/api/historias/${criada.corpo.id}`, { method: 'DELETE' })).status,
+      401
+    );
+    assert.equal(
+      (await req(`/api/historias/${criada.corpo.id}`, { method: 'DELETE', headers: autorizacao })).status,
+      204
+    );
+
+    // Config: leitura publica, escrita protegida.
+    assert.equal((await req('/api/config')).status, 200);
+    assert.equal(
+      (await req('/api/config', { method: 'PATCH', corpo: { url_oportunidades: 'https://x' } })).status,
+      401
+    );
   } finally {
     delete process.env.CHAVE_ADMIN;
   }
+});
+
+// --- Config ---
+
+test('GET /api/config devolve as chaves conhecidas e PATCH atualiza', async () => {
+  const inicial = await req('/api/config');
+  assert.equal(inicial.status, 200);
+  assert.equal(inicial.corpo.url_oportunidades, '');
+
+  const salvo = await req('/api/config', {
+    method: 'PATCH',
+    corpo: { url_oportunidades: 'https://skeelo.exemplo/vagas' },
+  });
+  assert.equal(salvo.status, 200);
+  assert.equal(salvo.corpo.url_oportunidades, 'https://skeelo.exemplo/vagas');
+
+  const relido = await req('/api/config');
+  assert.equal(relido.corpo.url_oportunidades, 'https://skeelo.exemplo/vagas');
+});
+
+test('PATCH /api/config rejeita chave desconhecida, valor nao-texto e corpo vazio', async () => {
+  const desconhecida = await req('/api/config', { method: 'PATCH', corpo: { tema: 'roxo' } });
+  assert.equal(desconhecida.status, 400);
+  assert.ok(desconhecida.corpo.erros.some((e) => e.includes('desconhecida')));
+
+  const naoTexto = await req('/api/config', { method: 'PATCH', corpo: { url_oportunidades: 42 } });
+  assert.equal(naoTexto.status, 400);
+
+  const vazio = await req('/api/config', { method: 'PATCH', corpo: {} });
+  assert.equal(vazio.status, 400);
 });
 
 // --- Metricas ---

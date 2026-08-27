@@ -6,6 +6,7 @@ const eventos = require('./rotas/eventos');
 const historias = require('./rotas/historias');
 const talentos = require('./rotas/talentos');
 const metricas = require('./rotas/metricas');
+const config = require('./rotas/config');
 
 const app = express();
 
@@ -15,6 +16,11 @@ app.use(express.json());
 // App "Proximo Capitulo" (Bienal 2026): experiencia mobile-first acessada por
 // QR Code / tablets no estande. E estatico: todo o conteudo dinamico vem da API.
 app.use('/app', express.static(path.join(__dirname, '..', 'public', 'app')));
+
+// Painel de gestao do app: historias das estantes, Estante de Talentos,
+// metricas e configuracoes. A pagina e estatica; as rotas de escrita e dados
+// pessoais que ela consome exigem CHAVE_ADMIN quando definida.
+app.use('/admin', express.static(path.join(__dirname, '..', 'public', 'admin')));
 
 // Pagina inicial: serve de mapa da API quando alguem abre a URL no navegador.
 app.get('/', (req, res) => {
@@ -29,6 +35,7 @@ app.get('/', (req, res) => {
 <h1>Bienal &mdash; Skeelo</h1>
 <p>Backend no ar.</p>
 <p><strong><a href="/app/">App Pr&oacute;ximo Cap&iacute;tulo</a></strong> &mdash; a experi&ecirc;ncia da Bienal 2026 (quiz + Estante dos Skeelers).</p>
+<p><strong><a href="/admin/">Painel de gest&atilde;o</a></strong> &mdash; hist&oacute;rias das estantes, Estante de Talentos, m&eacute;tricas e configura&ccedil;&otilde;es.</p>
 <p>Endpoints da programa&ccedil;&atilde;o:</p>
 <ul>
   <li><code>GET /health</code> &mdash; status da API e do banco</li>
@@ -47,6 +54,7 @@ app.get('/', (req, res) => {
   <li><code>GET /api/talentos</code> &mdash; listagem para o time de People (protegida por <code>CHAVE_ADMIN</code>)</li>
   <li><code>POST /api/metricas</code> &mdash; registra um evento de analytics</li>
   <li><code>GET /api/metricas/resumo</code> &mdash; visao agregada da experiencia</li>
+  <li><code>GET /api/config</code> e <code>PATCH /api/config</code> &mdash; configuracoes do app (ex.: URL de oportunidades)</li>
 </ul>
 <p>Exemplo: <a href="/api/eventos">/api/eventos</a></p>`);
 });
@@ -66,6 +74,7 @@ app.use('/api/eventos', eventos);
 app.use('/api/historias', historias);
 app.use('/api/talentos', talentos);
 app.use('/api/metricas', metricas);
+app.use('/api/config', config);
 
 // Listas auxiliares para montar filtros no front sem chumbar valores.
 app.get('/api/categorias', async (req, res, next) => {
