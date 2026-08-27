@@ -8,7 +8,9 @@
     "start": "node server.js",
     "migrar": "node src/migrar.js",
     "seed": "node src/seed.js",
-    "teste:api": "node testes/api.test.js"
+    "teste:api": "node testes/api.test.js",
+    "teste:app": "node testes/proximo-capitulo.test.js",
+    "teste": "node testes/api.test.js && node testes/proximo-capitulo.test.js"
   },
   "engines": {
     "node": ">=20"

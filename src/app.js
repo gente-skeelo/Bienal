@@ -1,12 +1,20 @@
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const { query } = require('./db');
 const eventos = require('./rotas/eventos');
+const historias = require('./rotas/historias');
+const talentos = require('./rotas/talentos');
+const metricas = require('./rotas/metricas');
 
 const app = express();
 
 app.use(cors()); // libera o consumo da API por qualquer front (site, app, etc.)
 app.use(express.json());
+
+// App "Proximo Capitulo" (Bienal 2026): experiencia mobile-first acessada por
+// QR Code / tablets no estande. E estatico: todo o conteudo dinamico vem da API.
+app.use('/app', express.static(path.join(__dirname, '..', 'public', 'app')));
 
 // Pagina inicial: serve de mapa da API quando alguem abre a URL no navegador.
 app.get('/', (req, res) => {
@@ -18,8 +26,10 @@ app.get('/', (req, res) => {
   code { background: #f1f1f1; padding: .1rem .3rem; border-radius: .2rem; }
   li { margin: .3rem 0; }
 </style>
-<h1>API da Programacao &mdash; Bienal</h1>
-<p>Backend no ar. Endpoints disponiveis:</p>
+<h1>Bienal &mdash; Skeelo</h1>
+<p>Backend no ar.</p>
+<p><strong><a href="/app/">App Pr&oacute;ximo Cap&iacute;tulo</a></strong> &mdash; a experi&ecirc;ncia da Bienal 2026 (quiz + Estante dos Skeelers).</p>
+<p>Endpoints da programa&ccedil;&atilde;o:</p>
 <ul>
   <li><code>GET /health</code> &mdash; status da API e do banco</li>
   <li><code>GET /api/eventos</code> &mdash; lista a programacao (filtros: <code>data</code>, <code>categoria</code>, <code>local</code>, <code>destaque</code>, <code>busca</code>, <code>limite</code>, <code>pagina</code>)</li>
@@ -28,6 +38,15 @@ app.get('/', (req, res) => {
   <li><code>PATCH /api/eventos/:id</code> &mdash; atualiza evento</li>
   <li><code>DELETE /api/eventos/:id</code> &mdash; remove evento</li>
   <li><code>GET /api/categorias</code> e <code>GET /api/locais</code> &mdash; valores em uso na grade</li>
+</ul>
+<p>Endpoints do app Pr&oacute;ximo Cap&iacute;tulo:</p>
+<ul>
+  <li><code>GET /api/historias</code> &mdash; Estantes dos Skeelers (filtro: <code>territorio</code>; <code>todas=true</code> inclui inativas)</li>
+  <li><code>POST /api/historias</code>, <code>PATCH /api/historias/:id</code>, <code>DELETE /api/historias/:id</code> &mdash; gestao do conteudo</li>
+  <li><code>POST /api/talentos</code> &mdash; inscricao na Estante de Talentos</li>
+  <li><code>GET /api/talentos</code> &mdash; listagem para o time de People (protegida por <code>CHAVE_ADMIN</code>)</li>
+  <li><code>POST /api/metricas</code> &mdash; registra um evento de analytics</li>
+  <li><code>GET /api/metricas/resumo</code> &mdash; visao agregada da experiencia</li>
 </ul>
 <p>Exemplo: <a href="/api/eventos">/api/eventos</a></p>`);
 });
@@ -44,6 +63,9 @@ app.get('/health', async (req, res) => {
 });
 
 app.use('/api/eventos', eventos);
+app.use('/api/historias', historias);
+app.use('/api/talentos', talentos);
+app.use('/api/metricas', metricas);
 
 // Listas auxiliares para montar filtros no front sem chumbar valores.
 app.get('/api/categorias', async (req, res, next) => {
