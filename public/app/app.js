@@ -413,6 +413,7 @@ function mostrarUrna() {
     estado.experienciaConcluida = true;
     registrar('experience_completed', { territorio: estado.territorio });
   }
+  document.body.classList.add('final'); // fechamento dourado (Bilhete Dourado)
   mostrar('tela-urna');
 }
 
@@ -424,6 +425,7 @@ function recomecar() {
   estado.historias = [];
   estado.experienciaConcluida = false;
   delete document.body.dataset.territorio;
+  document.body.classList.remove('final');
   mostrar('tela-entrada');
 }
 
