@@ -127,9 +127,13 @@ direto de um front-end sem configuração extra.
 
 A experiência fica em **`/app`** (ex.:
 `https://SUA-URL.up.railway.app/app/`) — é para lá que apontam o QR Code e os
-tablets do estande. Princípios do rascunho: mobile first, sem login, ~1 minuto
-de quiz, 1 pergunta por tela, botões grandes, resultado sem pedir dados e
-captura de dados só com interesse explícito.
+tablets do estande. Princípios: mobile first, sem login no quiz, ~1 minuto,
+1 pergunta por tela, botões grandes e resultado sem pedir dados. **O cadastro
+na Estante de Talentos é obrigatório para concluir a experiência e ganhar o
+brinde** (decisão de 28/08 — a opção de pular foi removida), e o app avisa
+isso desde a tela de entrada. O **voucher do livro não é entregue na hora**:
+é enviado depois por e-mail, como ação de CRM, a partir dos cadastros da
+Estante de Talentos.
 
 O time ajusta tudo pelo **painel de gestão em `/admin`** — sem mexer em
 código nem fazer deploy:
@@ -150,8 +154,8 @@ O fluxo implementado:
 ```
 Entrada → Quiz (7 perguntas) → Reveal → Resultado (território)
 → Estante dos Skeelers (3 livros + 3 histórias + 3 trajetórias)
-→ Trajetória do Skeeler → Employer Branding
-→ Oportunidades / Estante de Talentos → Urna Além da Página
+→ Trajetória do Skeeler → Employer Branding (+ link de oportunidades)
+→ Estante de Talentos (cadastro obrigatório) → Urna Além da Página
 ```
 
 ### Conteúdo parametrizável (Estantes dos Skeelers)

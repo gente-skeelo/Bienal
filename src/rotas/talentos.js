@@ -1,6 +1,7 @@
 // Estante de Talentos: porta permanente de relacionamento com quem quer ficar
-// perto dos proximos capitulos do Skeelo. A entrada e opcional e nao interfere
-// no acesso ao resultado do quiz nem ao brinde.
+// perto dos proximos capitulos do Skeelo. Desde a decisao de 28/08 o cadastro
+// e obrigatorio para concluir a experiencia e ganhar o brinde; o voucher do
+// livro e enviado depois por e-mail (acao de CRM), nao na hora.
 const express = require('express');
 const { query } = require('../db');
 const { validarTalento } = require('../validacao');
