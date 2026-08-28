@@ -171,6 +171,8 @@ legend { padding: 0 0.4rem; font-size: 0.9rem; color: var(--texto-suave); }
 .cartao-livro { font-weight: 700; }
 .cartao-detalhe { color: var(--texto-suave); font-size: 0.9rem; }
 
+/* Cores por territorio, iguais as do app: aprender verde, evoluir roxo,
+   imaginar laranja. */
 .etiqueta {
   font-size: 0.75rem;
   font-weight: 700;
@@ -178,11 +180,11 @@ legend { padding: 0 0.4rem; font-size: 0.9rem; color: var(--texto-suave); }
   letter-spacing: 0.06em;
   padding: 0.15rem 0.6rem;
   border-radius: 999px;
-  background: var(--acento);
-  color: var(--texto-sobre-acento);
+  background: #00dc87;
+  color: #052012;
 }
-.etiqueta.evoluir { background: #2dd4bf; }
-.etiqueta.imaginar { background: #a3e635; }
+.etiqueta.evoluir { background: #a78bfa; color: #241436; }
+.etiqueta.imaginar { background: #ffa149; color: #3a2005; }
 .etiqueta.cinza { background: var(--cartao-borda); color: var(--texto); }
 
 .cartao-acoes { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.4rem; }

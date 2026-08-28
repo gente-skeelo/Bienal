@@ -17,7 +17,8 @@
   --texto-suave: rgba(236, 250, 243, 0.78);
   --cartao: rgba(255, 255, 255, 0.06);
   --cartao-borda: rgba(0, 195, 140, 0.35);
-  --acento: #00c38c;             /* Caribbean Green, o verde do logo */
+  --verde-marca: #00dc87;        /* o verde do logo oficial: CTAs e marca, sempre */
+  --acento: #00dc87;             /* cor do territorio (muda apos o resultado) */
   --lima: #c6f13f;
   --dourado: #f0cf7d;
   --dourado-forte: #e0b04e;
@@ -28,11 +29,12 @@
   --fonte-texto: 'Nunito Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Cada territorio tinge a experiencia a partir do resultado, sempre dentro da
-   familia verde da marca - tons quentes de verde, sem leitura azulada. */
-body[data-territorio='aprender'] { --acento: #35e58b; --brilho: rgba(53, 229, 139, 0.45); }
-body[data-territorio='evoluir']  { --acento: #00c38c; --brilho: rgba(0, 195, 140, 0.45); }
-body[data-territorio='imaginar'] { --acento: #b8e62e; --brilho: rgba(184, 230, 46, 0.40); }
+/* Cada territorio tem cor propria (como o mural colorido dos estudos): marca a
+   identidade do resultado - nome, capa, linha do tempo, ticket. Os CTAs ficam
+   sempre no verde da marca. */
+body[data-territorio='aprender'] { --acento: #00dc87; --brilho: rgba(0, 220, 135, 0.45); }
+body[data-territorio='evoluir']  { --acento: #a78bfa; --brilho: rgba(167, 139, 250, 0.45); }
+body[data-territorio='imaginar'] { --acento: #ffa149; --brilho: rgba(255, 161, 73, 0.42); }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -135,7 +137,7 @@ h3 {
 
 /* Headline com gradiente lima -> verde, como no mockup do quiz dinamico. */
 .destaque {
-  background: linear-gradient(100deg, var(--lima), var(--acento));
+  background: linear-gradient(100deg, var(--lima), var(--verde-marca));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -212,11 +214,12 @@ h3 {
 .botao:active { transform: scale(0.98); }
 .botao:focus-visible, .alternativa:focus-visible { outline: 3px solid var(--lima); outline-offset: 2px; }
 
-/* CTA principal: gradiente lima -> verde com brilho, como nos mockups. */
+/* CTA principal: gradiente lima -> verde da marca com brilho, sempre igual -
+   a cor do territorio marca o conteudo, nao os botoes. */
 .botao.principal {
-  background: linear-gradient(120deg, var(--lima), var(--acento) 75%);
+  background: linear-gradient(120deg, var(--lima), var(--verde-marca) 75%);
   color: var(--texto-sobre-acento);
-  box-shadow: 0 0 28px var(--brilho), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 28px rgba(0, 220, 135, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 .botao.secundario {
   background: var(--cartao);
@@ -240,8 +243,8 @@ h3 {
   height: 100%;
   width: 0;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--acento), var(--lima));
-  box-shadow: 0 0 14px var(--brilho);
+  background: linear-gradient(90deg, var(--verde-marca), var(--lima));
+  box-shadow: 0 0 14px rgba(0, 220, 135, 0.45);
   transition: width 0.25s ease;
 }
 .quiz-passo { font-size: 0.85rem; color: var(--texto-suave); white-space: nowrap; }
