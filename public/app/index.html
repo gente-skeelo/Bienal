@@ -8,18 +8,39 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito+Sans:wght@400;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito+Sans:wght@400;600;700;800&display=swap">
   <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
+
+  <!-- Fagulhas da "biblioteca magica": camada decorativa fixa atras do conteudo. -->
+  <div class="fagulhas" aria-hidden="true">
+    <i>✦</i><i>✦</i><i>✦</i><i>✦</i><i>✦</i><i>✦</i><i>✦</i><i>✦</i><i>✦</i><i>✦</i>
+  </div>
 
   <main id="telas">
 
     <!-- TELA 01 | Entrada -->
     <section class="tela" id="tela-entrada">
       <div class="miolo">
+        <div class="livro-hero" aria-hidden="true">
+          <svg viewBox="0 0 140 96" role="presentation">
+            <defs>
+              <linearGradient id="grad-livro" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#c6f13f"/>
+                <stop offset="1" stop-color="#00c38c"/>
+              </linearGradient>
+            </defs>
+            <path d="M70 22 C56 10 34 8 18 14 L18 74 C34 68 56 70 70 82 Z" fill="url(#grad-livro)" opacity="0.95"/>
+            <path d="M70 22 C84 10 106 8 122 14 L122 74 C106 68 84 70 70 82 Z" fill="url(#grad-livro)" opacity="0.75"/>
+            <path d="M70 22 L70 82" stroke="#02271c" stroke-width="3" stroke-linecap="round"/>
+            <path d="M28 30 C40 26 54 27 63 33 M28 44 C40 40 54 41 63 47 M28 58 C40 54 54 55 63 61" stroke="#02271c" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+            <path d="M112 6 l2.2 5 5 2.2 -5 2.2 -2.2 5 -2.2 -5 -5 -2.2 5 -2.2 Z" fill="#f0cf7d"/>
+            <path d="M20 84 l1.6 3.6 3.6 1.6 -3.6 1.6 -1.6 3.6 -1.6 -3.6 -3.6 -1.6 3.6 -1.6 Z" fill="#f0cf7d"/>
+          </svg>
+        </div>
         <p class="marca">Skeelo <span>·</span> Bienal 2026</p>
-        <h1>Qual é o seu próximo capítulo profissional?</h1>
+        <h1>Qual é o seu <span class="destaque">próximo capítulo</span> profissional?</h1>
         <p class="apoio">Aprender algo novo? Evoluir para um novo desafio? Imaginar um caminho diferente?</p>
         <p class="apoio">Descubra em menos de 1 minuto e conheça histórias de quem constrói sua trajetória no Skeelo.</p>
         <p class="brinde">🎁 Complete a experiência e ganhe um brinde no estande — e um livro de presente.</p>
