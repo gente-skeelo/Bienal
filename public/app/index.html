@@ -23,20 +23,38 @@
     <!-- TELA 01 | Entrada -->
     <section class="tela" id="tela-entrada">
       <div class="miolo">
+        <!-- Esquilo leitor: versao estilizada do mascote, nas cores da marca.
+             Para usar o simbolo oficial, basta substituir este SVG. -->
         <div class="livro-hero" aria-hidden="true">
-          <svg viewBox="0 0 140 96" role="presentation">
+          <svg viewBox="0 0 150 130" role="presentation">
             <defs>
-              <linearGradient id="grad-livro" x1="0" y1="0" x2="1" y2="1">
+              <linearGradient id="grad-esquilo" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0" stop-color="#c6f13f"/>
                 <stop offset="1" stop-color="#00c38c"/>
               </linearGradient>
+              <linearGradient id="grad-cauda" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0" stop-color="#00c38c"/>
+                <stop offset="1" stop-color="#5fe0ae"/>
+              </linearGradient>
             </defs>
-            <path d="M70 22 C56 10 34 8 18 14 L18 74 C34 68 56 70 70 82 Z" fill="url(#grad-livro)" opacity="0.95"/>
-            <path d="M70 22 C84 10 106 8 122 14 L122 74 C106 68 84 70 70 82 Z" fill="url(#grad-livro)" opacity="0.75"/>
-            <path d="M70 22 L70 82" stroke="#02271c" stroke-width="3" stroke-linecap="round"/>
-            <path d="M28 30 C40 26 54 27 63 33 M28 44 C40 40 54 41 63 47 M28 58 C40 54 54 55 63 61" stroke="#02271c" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.5"/>
-            <path d="M112 6 l2.2 5 5 2.2 -5 2.2 -2.2 5 -2.2 -5 -5 -2.2 5 -2.2 Z" fill="#f0cf7d"/>
-            <path d="M20 84 l1.6 3.6 3.6 1.6 -3.6 1.6 -1.6 3.6 -1.6 -3.6 -3.6 -1.6 3.6 -1.6 Z" fill="#f0cf7d"/>
+            <path d="M34 106 C8 96 4 56 30 42 C52 30 72 44 64 62 C58 74 42 72 42 60"
+                  stroke="url(#grad-cauda)" stroke-width="17" fill="none" stroke-linecap="round"/>
+            <ellipse cx="82" cy="86" rx="32" ry="28" fill="url(#grad-esquilo)"/>
+            <path d="M98 22 C96 8 114 6 115 19 C115 27 107 30 102 27 Z" fill="#35d68f"/>
+            <circle cx="100" cy="40" r="23" fill="url(#grad-esquilo)"/>
+            <ellipse cx="74" cy="92" rx="15" ry="17" fill="#f0f7de"/>
+            <circle cx="107" cy="38" r="4" fill="#02271c"/>
+            <circle cx="108.5" cy="36.5" r="1.4" fill="#ffffff"/>
+            <path d="M112 48 C115 51 119 50 121 47" stroke="#02271c" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+            <g transform="translate(88 66) rotate(8)">
+              <path d="M0 6 C-8 0 -20 0 -26 3 L-26 22 C-20 19 -8 19 0 25 Z" fill="#f0f7de"/>
+              <path d="M0 6 C8 0 20 0 26 3 L26 22 C20 19 8 19 0 25 Z" fill="#fffef5"/>
+              <path d="M0 6 L0 25" stroke="#02271c" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M-20 8 C-14 6 -8 7 -4 9 M-20 14 C-14 12 -8 13 -4 15" stroke="#8aa08f" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+              <path d="M20 8 C14 6 8 7 4 9 M20 14 C14 12 8 13 4 15" stroke="#8aa08f" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+            </g>
+            <path d="M132 12 l2.4 5.4 5.4 2.4 -5.4 2.4 -2.4 5.4 -2.4 -5.4 -5.4 -2.4 5.4 -2.4 Z" fill="#f0cf7d"/>
+            <path d="M18 116 l1.7 3.8 3.8 1.7 -3.8 1.7 -1.7 3.8 -1.7 -3.8 -3.8 -1.7 3.8 -1.7 Z" fill="#f0cf7d"/>
           </svg>
         </div>
         <p class="marca">Skeelo <span>·</span> Bienal 2026</p>
@@ -58,8 +76,11 @@
         <p class="quiz-passo" id="quiz-passo">1 de 7</p>
       </header>
       <div class="miolo">
-        <h2 id="quiz-pergunta"></h2>
-        <div class="alternativas" id="quiz-alternativas"></div>
+        <!-- A pergunta e as respostas viram como pagina de livro a cada resposta. -->
+        <div class="pagina" id="quiz-pagina">
+          <h2 id="quiz-pergunta"></h2>
+          <div class="alternativas" id="quiz-alternativas"></div>
+        </div>
       </div>
     </section>
 

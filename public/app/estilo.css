@@ -29,9 +29,9 @@
 }
 
 /* Cada territorio tinge a experiencia a partir do resultado, sempre dentro da
-   familia verde da marca. */
-body[data-territorio='aprender'] { --acento: #00c38c; --brilho: rgba(0, 195, 140, 0.45); }
-body[data-territorio='evoluir']  { --acento: #2dd4bf; --brilho: rgba(45, 212, 191, 0.45); }
+   familia verde da marca - tons quentes de verde, sem leitura azulada. */
+body[data-territorio='aprender'] { --acento: #35e58b; --brilho: rgba(53, 229, 139, 0.45); }
+body[data-territorio='evoluir']  { --acento: #00c38c; --brilho: rgba(0, 195, 140, 0.45); }
 body[data-territorio='imaginar'] { --acento: #b8e62e; --brilho: rgba(184, 230, 46, 0.40); }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -245,6 +245,23 @@ h3 {
   transition: width 0.25s ease;
 }
 .quiz-passo { font-size: 0.85rem; color: var(--texto-suave); white-space: nowrap; }
+
+/* Virada de pagina: ao responder, a pergunta atual dobra como folha de livro
+   (eixo na lombada, a esquerda) e a proxima assenta vindo da direita. */
+#tela-quiz .miolo { perspective: 1200px; }
+.pagina { transform-origin: left center; }
+.pagina.virar-sai { animation: pagina-sai 0.22s ease-in forwards; }
+.pagina.virar-entra { animation: pagina-entra 0.28s ease-out; }
+@keyframes pagina-sai {
+  to { transform: rotateY(-88deg) translateX(-2%); opacity: 0.2; filter: brightness(0.7); }
+}
+@keyframes pagina-entra {
+  from { transform: rotateY(14deg) translateX(5%); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pagina.virar-sai, .pagina.virar-entra { animation: none; }
+}
 
 .alternativas { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem; }
 

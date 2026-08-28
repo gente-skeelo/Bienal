@@ -194,13 +194,29 @@ function embaralhar(lista) {
 }
 
 function responder(territorio) {
+  // Ignora toques enquanto a pagina esta virando (evita resposta dupla).
+  if ($('quiz-pagina').classList.contains('virar-sai')) return;
   estado.respostas.push(territorio);
-  if (estado.perguntaAtual < PERGUNTAS.length - 1) {
-    estado.perguntaAtual += 1;
-    renderizarPergunta();
-  } else {
+  if (estado.perguntaAtual >= PERGUNTAS.length - 1) {
     concluirQuiz();
+    return;
   }
+  estado.perguntaAtual += 1;
+
+  // A pergunta atual vira como pagina de livro; a proxima assenta em seguida.
+  const pagina = $('quiz-pagina');
+  const reduzirMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduzirMovimento) {
+    renderizarPergunta();
+    return;
+  }
+  pagina.classList.add('virar-sai');
+  setTimeout(() => {
+    renderizarPergunta();
+    pagina.classList.remove('virar-sai');
+    pagina.classList.add('virar-entra');
+    setTimeout(() => pagina.classList.remove('virar-entra'), 300);
+  }, 210);
 }
 
 function concluirQuiz() {
