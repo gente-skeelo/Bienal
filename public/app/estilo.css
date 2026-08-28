@@ -100,6 +100,15 @@ h3 { font-size: 1rem; margin-top: 0.75rem; color: var(--texto-suave); text-trans
   color: var(--texto);
 }
 
+/* Aviso do brinde na entrada: a pessoa precisa saber desde o comeco que
+   completar a experiencia vale algo. */
+.brinde {
+  border: 1px dashed var(--acento);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+}
+
 /* Botoes grandes: a experiencia roda em tablet e celular, em pe, no estande. */
 .acoes { display: flex; flex-direction: column; gap: 0.75rem; }
 

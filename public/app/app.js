@@ -1,7 +1,9 @@
 // App "Proximo Capitulo" — Bienal 2026.
 // Quiz de 7 perguntas -> territorio (Aprender, Evoluir, Imaginar) -> Estante dos
 // Skeelers -> trajetorias reais -> Employer Branding -> Estante de Talentos -> Urna.
-// Sem login; dados so entram quando a pessoa pede para entrar na Estante de Talentos.
+// Sem login no quiz; o cadastro na Estante de Talentos e obrigatorio para
+// concluir e ganhar o brinde (decisao de 28/08). O voucher do livro nao sai na
+// hora: e enviado depois por e-mail, como acao de CRM.
 
 // Link da pagina de vagas do Skeelo, ajustavel pelo painel /admin
 // (Configuracoes). Vazio = o botao de oportunidades nao aparece (evita link
@@ -438,8 +440,6 @@ $('btn-talentos').addEventListener('click', () => {
   registrar('talent_pool_clicked', { territorio: estado.territorio });
   mostrar('tela-talentos');
 });
-$('btn-pular-eb').addEventListener('click', mostrarUrna);
-$('btn-pular-talentos').addEventListener('click', mostrarUrna);
 $('btn-apos-talentos').addEventListener('click', mostrarUrna);
 $('form-talentos').addEventListener('submit', enviarTalento);
 $('btn-recomecar').addEventListener('click', recomecar);
