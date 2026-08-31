@@ -23,38 +23,68 @@
     <!-- TELA 01 | Entrada -->
     <section class="tela" id="tela-entrada">
       <div class="miolo">
-        <!-- Esquilo leitor: versao estilizada do mascote, nas cores da marca.
-             Para usar o simbolo oficial, basta substituir este SVG. -->
+        <!-- Livrinho magico: livro aberto com a luz saindo das paginas.
+             Cores da marca (lima -> verde) e fagulhas douradas. -->
         <div class="livro-hero" aria-hidden="true">
-          <svg viewBox="0 0 150 130" role="presentation">
+          <svg viewBox="0 0 140 120" role="presentation">
             <defs>
-              <linearGradient id="grad-esquilo" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#c6f13f"/>
-                <stop offset="1" stop-color="#00c38c"/>
-              </linearGradient>
-              <linearGradient id="grad-cauda" x1="0" y1="1" x2="1" y2="0">
+              <linearGradient id="livro-capa" x1="0" y1="1" x2="1" y2="0">
                 <stop offset="0" stop-color="#00c38c"/>
-                <stop offset="1" stop-color="#5fe0ae"/>
+                <stop offset="1" stop-color="#c6f13f"/>
               </linearGradient>
+              <linearGradient id="livro-pag-e" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#e8f3dd"/>
+                <stop offset="1" stop-color="#fffef7"/>
+              </linearGradient>
+              <linearGradient id="livro-pag-d" x1="1" y1="0" x2="0" y2="0">
+                <stop offset="0" stop-color="#e8f3dd"/>
+                <stop offset="1" stop-color="#fffef7"/>
+              </linearGradient>
+              <radialGradient id="livro-luz" cx="0.5" cy="0.88" r="0.72">
+                <stop offset="0" stop-color="#d9f77a" stop-opacity="0.5"/>
+                <stop offset="0.22" stop-color="#7fe86a" stop-opacity="0.22"/>
+                <stop offset="0.5" stop-color="#00dc87" stop-opacity="0.09"/>
+                <stop offset="0.78" stop-color="#00dc87" stop-opacity="0.025"/>
+                <stop offset="1" stop-color="#00dc87" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="livro-facho" x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0" stop-color="#d9f77a" stop-opacity="0.45"/>
+                <stop offset="0.6" stop-color="#c6f13f" stop-opacity="0.12"/>
+                <stop offset="1" stop-color="#c6f13f" stop-opacity="0"/>
+              </linearGradient>
+              <filter id="livro-suave" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="7"/>
+              </filter>
             </defs>
-            <path d="M34 106 C8 96 4 56 30 42 C52 30 72 44 64 62 C58 74 42 72 42 60"
-                  stroke="url(#grad-cauda)" stroke-width="17" fill="none" stroke-linecap="round"/>
-            <ellipse cx="82" cy="86" rx="32" ry="28" fill="url(#grad-esquilo)"/>
-            <path d="M98 22 C96 8 114 6 115 19 C115 27 107 30 102 27 Z" fill="#35d68f"/>
-            <circle cx="100" cy="40" r="23" fill="url(#grad-esquilo)"/>
-            <ellipse cx="74" cy="92" rx="15" ry="17" fill="#f0f7de"/>
-            <circle cx="107" cy="38" r="4" fill="#02271c"/>
-            <circle cx="108.5" cy="36.5" r="1.4" fill="#ffffff"/>
-            <path d="M112 48 C115 51 119 50 121 47" stroke="#02271c" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-            <g transform="translate(88 66) rotate(8)">
-              <path d="M0 6 C-8 0 -20 0 -26 3 L-26 22 C-20 19 -8 19 0 25 Z" fill="#f0f7de"/>
-              <path d="M0 6 C8 0 20 0 26 3 L26 22 C20 19 8 19 0 25 Z" fill="#fffef5"/>
-              <path d="M0 6 L0 25" stroke="#02271c" stroke-width="1.6" stroke-linecap="round"/>
-              <path d="M-20 8 C-14 6 -8 7 -4 9 M-20 14 C-14 12 -8 13 -4 15" stroke="#8aa08f" stroke-width="1.4" fill="none" stroke-linecap="round"/>
-              <path d="M20 8 C14 6 8 7 4 9 M20 14 C14 12 8 13 4 15" stroke="#8aa08f" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+
+            <g filter="url(#livro-suave)">
+              <ellipse cx="70" cy="58" rx="54" ry="40" fill="url(#livro-luz)"/>
+              <path d="M62 60 L44 8 L96 8 L78 60 Z" fill="url(#livro-facho)"/>
             </g>
-            <path d="M132 12 l2.4 5.4 5.4 2.4 -5.4 2.4 -2.4 5.4 -2.4 -5.4 -5.4 -2.4 5.4 -2.4 Z" fill="#f0cf7d"/>
-            <path d="M18 116 l1.7 3.8 3.8 1.7 -3.8 1.7 -1.7 3.8 -1.7 -3.8 -3.8 -1.7 3.8 -1.7 Z" fill="#f0cf7d"/>
+
+            <path d="M70 50 C56 38 30 36 11 43 L11 92 C30 85 56 87 70 99
+                     C84 87 110 85 129 92 L129 43 C110 36 84 38 70 50 Z"
+                  fill="url(#livro-capa)"/>
+
+            <path d="M67 52 C54 42 33 40 17 46 L17 86 C33 80 54 82 67 92 Z" fill="url(#livro-pag-e)"/>
+            <path d="M73 52 C86 42 107 40 123 46 L123 86 C107 80 86 82 73 92 Z" fill="url(#livro-pag-d)"/>
+
+            <g stroke="#9fb8a6" stroke-width="2.4" stroke-linecap="round" fill="none" opacity="0.75">
+              <path d="M27 56 C38 54 50 56 58 60"/>
+              <path d="M27 66 C38 64 50 66 58 70"/>
+              <path d="M27 76 C38 74 50 76 58 80"/>
+              <path d="M113 56 C102 54 90 56 82 60"/>
+              <path d="M113 66 C102 64 90 66 82 70"/>
+              <path d="M113 76 C102 74 90 76 82 80"/>
+            </g>
+
+            <path d="M70 50 L70 99" stroke="#02694a" stroke-width="4" stroke-linecap="round"/>
+
+            <g fill="#f0cf7d">
+              <path d="M70 6 l3 6.6 6.6 3 -6.6 3 -3 6.6 -3 -6.6 -6.6 -3 6.6 -3 Z"/>
+              <path d="M104 20 l2.2 4.8 4.8 2.2 -4.8 2.2 -2.2 4.8 -2.2 -4.8 -4.8 -2.2 4.8 -2.2 Z"/>
+              <path d="M36 24 l1.8 4 4 1.8 -4 1.8 -1.8 4 -1.8 -4 -4 -1.8 4 -1.8 Z"/>
+            </g>
           </svg>
         </div>
         <p class="marca">Skeelo <span>·</span> Bienal 2026</p>
