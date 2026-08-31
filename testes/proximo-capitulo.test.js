@@ -63,7 +63,7 @@ test('GET /app/ serve a experiencia mobile', async () => {
   assert.equal(resposta.status, 200);
   assert.match(resposta.headers.get('content-type'), /text\/html/);
   const html = await resposta.text();
-  assert.ok(html.includes('Qual é o seu próximo capítulo profissional?'));
+  assert.ok(html.includes('Próximo Capítulo — Skeelo na Bienal 2026')); // <title>, estavel a mudancas de layout
 });
 
 test('GET /admin/ serve o painel de gestao', async () => {
