@@ -300,11 +300,28 @@ function montarCartao(historia) {
   citacao.className = 'cartao-citacao';
   citacao.textContent = `“${historia.citacao}”`;
 
-  const skeeler = document.createElement('p');
-  skeeler.className = 'cartao-skeeler';
-  skeeler.textContent = `${historia.skeeler_nome} · ${historia.skeeler_cargo}`;
+  cartao.append(livro, citacao);
 
-  cartao.append(livro, citacao, skeeler);
+  // "Indicacao do Skeelo": o livro que temos no acervo, logo abaixo da citacao.
+  if (historia.indicacao) {
+    cartao.appendChild(montarIndicacao(historia.indicacao));
+  }
+
+  // Skeeler: foto redonda (quando ha) + nome e cargo.
+  const skeeler = document.createElement('div');
+  skeeler.className = 'skeeler';
+  if (historia.foto) {
+    const foto = document.createElement('img');
+    foto.className = 'skeeler-foto';
+    foto.src = historia.foto;
+    foto.alt = '';
+    skeeler.appendChild(foto);
+  }
+  const nome = document.createElement('p');
+  nome.className = 'cartao-skeeler';
+  nome.textContent = `${historia.skeeler_nome} · ${historia.skeeler_cargo}`;
+  skeeler.appendChild(nome);
+  cartao.appendChild(skeeler);
 
   if (historia.resumo) {
     const resumo = document.createElement('p');
@@ -321,6 +338,19 @@ function montarCartao(historia) {
   cartao.appendChild(botao);
 
   return cartao;
+}
+
+function montarIndicacao(titulo) {
+  const bloco = document.createElement('div');
+  bloco.className = 'indicacao';
+  const rotulo = document.createElement('p');
+  rotulo.className = 'indicacao-rotulo';
+  rotulo.textContent = 'Indicação do Skeelo';
+  const livro = document.createElement('p');
+  livro.className = 'indicacao-livro';
+  livro.textContent = titulo;
+  bloco.append(rotulo, livro);
+  return bloco;
 }
 
 // Estante sem história publicada para o territorio: em vez de mandar o visitante
@@ -378,6 +408,13 @@ function mostrarTrajetoria(historia) {
   $('trajetoria-livro').textContent = `📚 ${historia.livro}`;
   $('trajetoria-citacao').textContent = `“${historia.citacao}”`;
 
+  const foto = $('trajetoria-foto');
+  foto.hidden = !historia.foto;
+  foto.src = historia.foto || '';
+
+  $('trajetoria-indicacao').hidden = !historia.indicacao;
+  $('trajetoria-indicacao-livro').textContent = historia.indicacao || '';
+
   const linha = $('trajetoria-linha');
   linha.innerHTML = '';
   for (const marco of historia.trajetoria || []) {
@@ -392,9 +429,11 @@ function mostrarTrajetoria(historia) {
 
   // So oferecemos o CTA do livro quando ha link garantido: ninguem deve
   // encontrar uma barreira de acesso depois do convite.
+  // O link e do livro que temos no acervo: com indicacao, o botao fala dela.
   const botaoLivro = $('btn-livro');
   if (historia.livro_url) {
     botaoLivro.href = historia.livro_url;
+    botaoLivro.textContent = historia.indicacao ? 'Ler a indicação no Skeelo' : 'Conhecer o livro no Skeelo';
     botaoLivro.hidden = false;
     botaoLivro.onclick = () => registrar('book_clicked', { territorio: estado.territorio, historia_id: historia.id });
   } else {
@@ -409,13 +448,16 @@ function mostrarTrajetoria(historia) {
 // Employer Branding + Estante de Talentos
 // ---------------------------------------------------------------------------
 
-function mostrarEmployerBranding() {
+// O convite para as vagas so aparece na confirmacao do cadastro: antes disso ele
+// e um link externo (abre outra aba) competindo com a Estante de Talentos, que e
+// o que fecha a experiencia e libera o brinde.
+function mostrarConfirmacaoTalento() {
   const botaoVagas = $('btn-vagas');
   if (URL_OPORTUNIDADES) {
     botaoVagas.href = URL_OPORTUNIDADES;
     botaoVagas.hidden = false;
   }
-  mostrar('tela-eb');
+  mostrar('tela-talentos-ok');
 }
 
 async function enviarTalento(evento) {
@@ -427,15 +469,22 @@ async function enviarTalento(evento) {
   const dados = {
     nome: form.nome.value.trim(),
     email: form.email.value.trim(),
+    telefone: form.telefone.value.trim() || null,
     area_interesse: form.area_interesse.value.trim() || null,
     linkedin: form.linkedin.value.trim() || null,
     mensagem: form.mensagem.value.trim() || null,
     territorio: estado.territorio,
+    maioridade: form.maioridade.checked,
     consentimento: form.consentimento.checked,
   };
 
   if (!dados.nome || !dados.email) {
     erro.textContent = 'Precisamos do seu nome e e-mail para manter contato.';
+    erro.hidden = false;
+    return;
+  }
+  if (!dados.maioridade) {
+    erro.textContent = 'A Estante de Talentos é para maiores de 18 anos. Passe no estande para conhecer as histórias com a gente.';
     erro.hidden = false;
     return;
   }
@@ -461,7 +510,7 @@ async function enviarTalento(evento) {
     }
     registrar('talent_pool_completed', { territorio: estado.territorio });
     form.reset();
-    mostrar('tela-talentos-ok');
+    mostrarConfirmacaoTalento();
   } catch {
     erro.textContent = 'Não conseguimos salvar agora. Tente de novo.';
     erro.hidden = false;
@@ -503,7 +552,7 @@ function recomecar() {
 $('btn-comecar').addEventListener('click', comecarQuiz);
 $('btn-estante').addEventListener('click', mostrarEstante);
 $('btn-voltar-estante').addEventListener('click', () => mostrar('tela-estante'));
-$('btn-eb').addEventListener('click', mostrarEmployerBranding);
+$('btn-eb').addEventListener('click', () => mostrar('tela-eb'));
 $('btn-vagas').addEventListener('click', () => registrar('careers_clicked', { territorio: estado.territorio }));
 $('btn-talentos').addEventListener('click', () => {
   registrar('talent_pool_clicked', { territorio: estado.territorio });

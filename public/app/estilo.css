@@ -110,7 +110,10 @@ body::before {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tela, .livro-animado, .capa, .livro-hero svg, .urna-ilustracao svg { animation: none; }
+  .tela, .livro-animado, .capa, .livro-hero svg { animation: none; }
+  .urna-ilustracao svg, .urna-bilhete, .urna-fagulhas { animation: none; }
+  .vale svg, .vale-fagulhas { animation: none; }
+  .confete { display: none; }
   .capa::after { animation: none; }
   .fagulhas i { animation: none; opacity: 0.35; }
 }
@@ -382,6 +385,38 @@ h3 {
 
 .cartao .botao { margin-top: 0.5rem; }
 
+/* Skeeler: foto redonda com anel na cor do territorio. Sem foto, sobra so o
+   texto - o bloco nao deixa buraco. */
+.skeeler { display: flex; align-items: center; gap: 0.75rem; }
+.skeeler-foto {
+  flex: 0 0 auto;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--acento);
+  box-shadow: 0 0 14px var(--brilho);
+  background: var(--cartao);
+}
+.skeeler-foto.grande { width: 4.5rem; height: 4.5rem; border-width: 3px; }
+.skeeler h2 { line-height: 1.2; }
+
+/* "Indicacao do Skeelo": o livro do acervo, logo abaixo da citacao. Dourado,
+   como todo momento "livro" da experiencia. */
+.indicacao {
+  padding: 0.6rem 0.85rem;
+  border-left: 3px solid var(--dourado-forte);
+  border-radius: 0 0.75rem 0.75rem 0;
+  background: rgba(224, 176, 78, 0.08);
+}
+.indicacao-rotulo {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dourado);
+}
+.indicacao-livro { font-family: var(--fonte-titulo); font-weight: 700; }
+
 /* Convite dentro de um paragrafo ("Veja algumas delas aqui."): e um <button>
    para nao fingir navegacao, mas se comporta como link no meio do texto. */
 .link-inline {
@@ -428,33 +463,57 @@ h3 {
   font-size: 1.4rem;
 }
 
-/* Selo da Urna de brindes: sinal visual que o visitante mostra para o time que
-   fica com a urna no estande. Fica no dourado reservado aos momentos magicos. */
+/* Selo da Urna de brindes: cartao horizontal e leve, logo acima dos CTAs - os
+   dois botoes ficam juntos como um bloco de acao so, em vez de terem uma caixa
+   de aviso empilhada embaixo. A urna balanca como quem chacoalha a urna no
+   estande, o bilhete cai na fenda e as fagulhas piscam: o convite fica
+   simpatico em vez de parecer um aviso legal. */
 .selo-urna {
-  margin-top: 0.5rem;
-  padding: 1rem 1.25rem 1.1rem;
-  border: 1px solid rgba(224, 176, 78, 0.45);
-  border-radius: 1.25rem;
-  background: rgba(224, 176, 78, 0.08);
-  box-shadow: 0 0 24px rgba(224, 176, 78, 0.15);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.9rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(224, 176, 78, 0.38);
+  border-radius: 1.25rem;
+  background: linear-gradient(140deg, rgba(224, 176, 78, 0.15), rgba(224, 176, 78, 0.04) 70%);
+  box-shadow: 0 0 22px rgba(224, 176, 78, 0.1);
 }
+
+.urna-ilustracao { flex: 0 0 auto; }
 .urna-ilustracao svg {
   display: block;
-  width: 6.5rem;
-  filter: drop-shadow(0 0 20px rgba(240, 207, 125, 0.5));
-  animation: flutuar 3.5s ease-in-out infinite;
+  width: 5.5rem;
+  filter: drop-shadow(0 0 16px rgba(240, 207, 125, 0.45));
+  transform-origin: 50% 88%;
+  animation: urna-balanca 3.6s ease-in-out infinite;
 }
+@keyframes urna-balanca {
+  0%, 100% { transform: rotate(-3.5deg); }
+  50%      { transform: rotate(3.5deg); }
+}
+
+/* O bilhete cai na fenda; em unidades do viewBox, entao os valores sao
+   pequenos de proposito. */
+.urna-bilhete { animation: urna-bilhete 2.8s ease-in-out infinite; }
+@keyframes urna-bilhete {
+  0%, 100% { transform: translateY(-3px); }
+  55%      { transform: translateY(5px); }
+}
+
+.urna-fagulhas { animation: urna-fagulhas 2.4s ease-in-out infinite; }
+@keyframes urna-fagulhas {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+
+.selo-urna-texto { display: flex; flex-direction: column; gap: 0.15rem; }
 .selo-urna-titulo {
   font-family: var(--fonte-titulo);
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: var(--dourado);
-  text-align: center;
 }
+.selo-urna .nota { text-align: left; font-size: 0.8rem; line-height: 1.45; }
 
 /* Formulario da Estante de Talentos */
 form { display: flex; flex-direction: column; gap: 0.9rem; margin-top: 0.5rem; }
@@ -479,6 +538,76 @@ form input:focus, form textarea:focus { outline: 2px solid var(--acento); border
 .consentimento input { width: 1.25rem; height: 1.25rem; margin-top: 0.15rem; accent-color: var(--acento); }
 
 .erro { color: #ffb4a8; font-size: 0.9rem; }
+
+/* Canal de remocao dos dados (LGPD): informativo, fora do rotulo do checkbox. */
+.nota-dados { font-size: 0.8rem; color: var(--texto-suave); }
+.nota-dados a { color: var(--lima); }
+
+/* Vale do livro: aparece na confirmacao do cadastro, como imagem do que a
+   pessoa acabou de garantir. O voucher de verdade chega por e-mail. */
+.vale { display: flex; justify-content: center; }
+.vale svg {
+  width: 13rem;
+  max-width: 100%;
+  filter: drop-shadow(0 0 20px rgba(240, 207, 125, 0.5));
+  animation: flutuar 3.5s ease-in-out infinite;
+}
+.vale-mini {
+  font-family: var(--fonte-titulo);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  fill: #02271c;
+}
+.vale-forte {
+  font-family: var(--fonte-titulo);
+  font-size: 15px;
+  font-weight: 800;
+  fill: #02271c;
+}
+.vale-fagulhas { animation: urna-fagulhas 2.4s ease-in-out infinite; }
+
+/* Tela final: a urna maior e o confete caindo - a experiencia terminou e a
+   pessoa ganhou a chance, entao a tela comemora em vez de so informar. */
+.urna-festa { display: flex; justify-content: center; }
+.urna-festa svg { width: 8rem; }
+
+#tela-urna { position: relative; overflow: hidden; }
+.confete { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.confete i {
+  position: absolute;
+  top: 0;
+  width: 0.45rem;
+  height: 0.7rem;
+  border-radius: 1px;
+  opacity: 0;
+  animation-name: confete-cai;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes confete-cai {
+  0%   { transform: translate3d(0, -10vh, 0) rotate(0deg); opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translate3d(0, 105vh, 0) rotate(760deg); opacity: 0; }
+}
+.confete i:nth-child(1) { left: 6%; background: var(--dourado); animation-duration: 3.4s; animation-delay: 0s; }
+.confete i:nth-child(2) { left: 14%; background: var(--lima); animation-duration: 4.1s; animation-delay: 0.7s; }
+.confete i:nth-child(3) { left: 22%; background: var(--verde-marca); animation-duration: 3.7s; animation-delay: 1.4s; }
+.confete i:nth-child(4) { left: 31%; background: var(--dourado); animation-duration: 4.4s; animation-delay: 0.3s; }
+.confete i:nth-child(5) { left: 39%; background: var(--lima); animation-duration: 3.2s; animation-delay: 2.1s; }
+.confete i:nth-child(6) { left: 47%; background: var(--verde-marca); animation-duration: 4.0s; animation-delay: 1.0s; }
+.confete i:nth-child(7) { left: 55%; background: var(--dourado); animation-duration: 3.6s; animation-delay: 2.6s; }
+.confete i:nth-child(8) { left: 63%; background: var(--lima); animation-duration: 4.3s; animation-delay: 0.5s; }
+.confete i:nth-child(9) { left: 71%; background: var(--verde-marca); animation-duration: 3.5s; animation-delay: 1.8s; }
+.confete i:nth-child(10) { left: 79%; background: var(--dourado); animation-duration: 4.1s; animation-delay: 1.2s; }
+.confete i:nth-child(11) { left: 87%; background: var(--lima); animation-duration: 3.8s; animation-delay: 2.9s; }
+.confete i:nth-child(12) { left: 94%; background: var(--verde-marca); animation-duration: 4.5s; animation-delay: 0.9s; }
+.confete i:nth-child(13) { left: 35%; background: var(--dourado); animation-duration: 4.7s; animation-delay: 3.4s; }
+.confete i:nth-child(14) { left: 68%; background: var(--lima); animation-duration: 3.9s; animation-delay: 3.8s; }
+
+/* O conteudo fica na frente do confete. */
+#tela-urna .miolo, #tela-urna .acoes { position: relative; z-index: 1; }
 
 /* Urna: o fechamento em dourado - o mesmo fio do Bilhete Dourado. */
 body.final .livro-animado { filter: drop-shadow(0 0 24px rgba(240, 207, 125, 0.75)); }

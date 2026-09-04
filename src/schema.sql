@@ -27,6 +27,8 @@ CREATE TABLE IF NOT EXISTS historias (
   livro         TEXT    NOT NULL,
   livro_url     TEXT,             -- so exibimos o CTA do livro quando ha link garantido
   citacao       TEXT    NOT NULL, -- "Esse livro me acompanhou quando..."
+  indicacao     TEXT,             -- "Indicacao do Skeelo": o livro que temos no acervo, ligado a historia
+  foto          TEXT,             -- foto do Skeeler como data URL (JPEG base64, reduzida no painel)
   skeeler_nome  TEXT    NOT NULL,
   skeeler_cargo TEXT    NOT NULL,
   resumo        TEXT,             -- mini trajetoria em uma linha: "Software Engineer -> novos projetos -> lideranca"
@@ -37,6 +39,11 @@ CREATE TABLE IF NOT EXISTS historias (
   atualizado_em TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Colunas adicionadas depois do primeiro deploy (o CREATE TABLE so vale para
+-- banco novo).
+ALTER TABLE historias ADD COLUMN IF NOT EXISTS indicacao TEXT;
+ALTER TABLE historias ADD COLUMN IF NOT EXISTS foto TEXT;
+
 CREATE INDEX IF NOT EXISTS historias_territorio_idx ON historias (territorio, ativo, ordem);
 
 -- Estante de Talentos: quem quer ficar perto dos proximos capitulos do Skeelo.
@@ -45,14 +52,21 @@ CREATE TABLE IF NOT EXISTS talentos (
   id             SERIAL PRIMARY KEY,
   nome           TEXT    NOT NULL,
   email          TEXT    NOT NULL,
+  telefone       TEXT,
   area_interesse TEXT,
   linkedin       TEXT,
   mensagem       TEXT,   -- "conte um pouco sobre sua trajetoria"
   territorio     TEXT    CHECK (territorio IN ('aprender', 'evoluir', 'imaginar')),
+  maioridade     BOOLEAN,  -- declaracao de 18+ feita no formulario
   consentimento  BOOLEAN NOT NULL,
   criado_em      TIMESTAMPTZ NOT NULL DEFAULT now(),
   atualizado_em  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Coluna adicionada depois do primeiro deploy: o CREATE TABLE acima so vale
+-- para banco novo, entao bancos que ja existiam precisam do ALTER.
+ALTER TABLE talentos ADD COLUMN IF NOT EXISTS telefone TEXT;
+ALTER TABLE talentos ADD COLUMN IF NOT EXISTS maioridade BOOLEAN;
 
 -- Quem se inscreve duas vezes atualiza o proprio cadastro em vez de duplicar.
 CREATE UNIQUE INDEX IF NOT EXISTS talentos_email_idx ON talentos (lower(email));

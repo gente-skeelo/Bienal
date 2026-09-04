@@ -100,6 +100,10 @@ function validarEvento(corpo, { parcial = false } = {}) {
 
 const TERRITORIOS = ['aprender', 'evoluir', 'imaginar'];
 
+// Foto do Skeeler: 320px em JPEG da uns 20-60 KB, ou 30-80 mil caracteres em
+// base64. O teto deixa folga sem abrir a porta para uma foto de 5 MB no JSON.
+const FOTO_MAX = 150000;
+
 // Eventos de analytics que o front pode registrar (secao 14 do rascunho do app).
 const EVENTOS_METRICA = [
   'quiz_started',
@@ -126,7 +130,7 @@ function validarHistoria(corpo, { parcial = false } = {}) {
     return { erros: ['O corpo da requisicao precisa ser um objeto JSON.'] };
   }
 
-  const campos = ['territorio', 'livro', 'livro_url', 'citacao', 'skeeler_nome', 'skeeler_cargo', 'resumo', 'trajetoria', 'ordem', 'ativo'];
+  const campos = ['territorio', 'livro', 'livro_url', 'citacao', 'indicacao', 'foto', 'skeeler_nome', 'skeeler_cargo', 'resumo', 'trajetoria', 'ordem', 'ativo'];
   const desconhecidos = Object.keys(corpo).filter((campo) => !campos.includes(campo));
   if (desconhecidos.length > 0) {
     erros.push(`Campos nao reconhecidos: ${desconhecidos.join(', ')}.`);
@@ -157,7 +161,7 @@ function validarHistoria(corpo, { parcial = false } = {}) {
   }
 
   // textos opcionais
-  for (const campo of ['livro_url', 'resumo']) {
+  for (const campo of ['livro_url', 'indicacao', 'resumo']) {
     if (corpo[campo] === undefined) continue;
     if (corpo[campo] === null) {
       dados[campo] = null;
@@ -165,6 +169,20 @@ function validarHistoria(corpo, { parcial = false } = {}) {
       erros.push(`${campo} precisa ser texto ou null.`);
     } else {
       dados[campo] = corpo[campo].trim() || null;
+    }
+  }
+
+  // foto: data URL de imagem, ja reduzida pelo painel (320px, JPEG). O limite
+  // de tamanho existe porque ela viaja no JSON de toda listagem do app.
+  if (corpo.foto !== undefined) {
+    if (corpo.foto === null) {
+      dados.foto = null;
+    } else if (typeof corpo.foto !== 'string' || !/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(corpo.foto)) {
+      erros.push('foto precisa ser uma data URL de imagem (jpeg, png ou webp) ou null.');
+    } else if (corpo.foto.length > FOTO_MAX) {
+      erros.push(`foto grande demais: use o painel, que reduz a imagem antes de enviar (maximo ${FOTO_MAX} caracteres).`);
+    } else {
+      dados.foto = corpo.foto;
     }
   }
 
@@ -216,7 +234,7 @@ function validarTalento(corpo) {
     return { erros: ['O corpo da requisicao precisa ser um objeto JSON.'] };
   }
 
-  const campos = ['nome', 'email', 'area_interesse', 'linkedin', 'mensagem', 'territorio', 'consentimento'];
+  const campos = ['nome', 'email', 'telefone', 'area_interesse', 'linkedin', 'mensagem', 'territorio', 'maioridade', 'consentimento'];
   const desconhecidos = Object.keys(corpo).filter((campo) => !campos.includes(campo));
   if (desconhecidos.length > 0) {
     erros.push(`Campos nao reconhecidos: ${desconhecidos.join(', ')}.`);
@@ -242,7 +260,16 @@ function validarTalento(corpo) {
     dados.consentimento = true;
   }
 
-  for (const campo of ['area_interesse', 'linkedin', 'mensagem']) {
+  // O consentimento so e valido se quem o da tem capacidade civil: por isso a
+  // declaracao de 18+ e obrigatoria e fica gravada junto do cadastro. Sem
+  // registro, a declaracao nao serve de nada depois.
+  if (corpo.maioridade !== true) {
+    erros.push('maioridade precisa ser true: a Estante de Talentos e para maiores de 18 anos.');
+  } else {
+    dados.maioridade = true;
+  }
+
+  for (const campo of ['telefone', 'area_interesse', 'linkedin', 'mensagem']) {
     if (corpo[campo] === undefined || corpo[campo] === null) {
       dados[campo] = null;
     } else if (typeof corpo[campo] !== 'string') {

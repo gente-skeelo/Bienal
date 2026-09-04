@@ -34,6 +34,8 @@ const HISTORIA = {
   territorio: 'evoluir',
   livro: 'Livro de teste',
   citacao: 'Esse livro me acompanhou quando assumi meu primeiro desafio como lideranca.',
+  indicacao: 'Livro do acervo — Autora',
+  foto: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AVN//2Q==',
   skeeler_nome: 'Mariana',
   skeeler_cargo: 'Engineering Manager',
   resumo: 'Software Engineer -> novos projetos -> lideranca',
@@ -81,7 +83,30 @@ test('POST /api/historias cria uma historia completa', async () => {
   assert.equal(corpo.territorio, 'evoluir');
   assert.equal(corpo.skeeler_nome, 'Mariana');
   assert.equal(corpo.ativo, true);
+  assert.equal(corpo.indicacao, 'Livro do acervo — Autora');
+  assert.ok(corpo.foto.startsWith('data:image/jpeg;base64,'));
   assert.deepEqual(corpo.trajetoria[0], { quando: '2022', marco: 'Entrou como Software Engineer' });
+});
+
+test('POST /api/historias valida a foto (data URL de imagem, tamanho limitado) e aceita null', async () => {
+  const naoImagem = await req('/api/historias', { method: 'POST', corpo: { ...HISTORIA, foto: 'https://exemplo.com/foto.jpg' } });
+  assert.equal(naoImagem.status, 400);
+  assert.ok(naoImagem.corpo.erros.some((e) => e.includes('foto')));
+
+  const grande = await req('/api/historias', {
+    method: 'POST',
+    corpo: { ...HISTORIA, foto: 'data:image/jpeg;base64,' + 'A'.repeat(160000) },
+  });
+  assert.equal(grande.status, 400);
+  assert.ok(grande.corpo.erros.some((e) => e.includes('grande')));
+
+  const semFoto = await req('/api/historias', { method: 'POST', corpo: { ...HISTORIA, foto: null, indicacao: null } });
+  assert.equal(semFoto.status, 201);
+  assert.equal(semFoto.corpo.foto, null);
+  assert.equal(semFoto.corpo.indicacao, null);
+
+  // Limpa para nao alterar as contagens dos testes de filtro que vem depois.
+  assert.equal((await req(`/api/historias/${semFoto.corpo.id}`, { method: 'DELETE' })).status, 204);
 });
 
 test('POST /api/historias valida territorio, campos obrigatorios e trajetoria', async () => {
@@ -163,6 +188,16 @@ test('POST /api/talentos exige nome, email valido e consentimento', async () => 
   assert.ok(corpo.erros.some((e) => e.includes('nome')));
   assert.ok(corpo.erros.some((e) => e.includes('email')));
   assert.ok(corpo.erros.some((e) => e.includes('consentimento')));
+  assert.ok(corpo.erros.some((e) => e.includes('maioridade')));
+});
+
+test('POST /api/talentos recusa quem nao declara 18 anos ou mais', async () => {
+  const { status, corpo } = await req('/api/talentos', {
+    method: 'POST',
+    corpo: { nome: 'Menor', email: 'menor@exemplo.com', consentimento: true, maioridade: false },
+  });
+  assert.equal(status, 400);
+  assert.ok(corpo.erros.some((e) => e.includes('maioridade')));
 });
 
 test('POST /api/talentos cria e reinscricao com o mesmo e-mail atualiza', async () => {
@@ -171,8 +206,10 @@ test('POST /api/talentos cria e reinscricao com o mesmo e-mail atualiza', async 
     corpo: {
       nome: 'Visitante',
       email: 'Visitante@Exemplo.com',
+      telefone: '(11) 91234-5678',
       area_interesse: 'Produto',
       territorio: 'imaginar',
+      maioridade: true,
       consentimento: true,
     },
   });
@@ -181,11 +218,13 @@ test('POST /api/talentos cria e reinscricao com o mesmo e-mail atualiza', async 
 
   const segunda = await req('/api/talentos', {
     method: 'POST',
-    corpo: { nome: 'Visitante Silva', email: 'visitante@exemplo.com', consentimento: true },
+    corpo: { nome: 'Visitante Silva', email: 'visitante@exemplo.com', consentimento: true, maioridade: true },
   });
   assert.equal(segunda.status, 200); // atualizou em vez de duplicar
   assert.equal(segunda.corpo.nome, 'Visitante Silva');
   assert.equal(segunda.corpo.area_interesse, 'Produto'); // preservado
+  assert.equal(segunda.corpo.telefone, '(11) 91234-5678'); // preservado
+  assert.equal(segunda.corpo.maioridade, true);
   assert.equal(segunda.corpo.territorio, 'imaginar'); // preservado
 
   const lista = await req('/api/talentos');

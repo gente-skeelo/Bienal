@@ -20,19 +20,21 @@ router.post(
     if (erros) return res.status(400).json({ erros });
 
     const { rows } = await query(
-      `INSERT INTO talentos (nome, email, area_interesse, linkedin, mensagem, territorio, consentimento)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `INSERT INTO talentos (nome, email, telefone, area_interesse, linkedin, mensagem, territorio, maioridade, consentimento)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
        ON CONFLICT (lower(email)) DO UPDATE SET
          nome = EXCLUDED.nome,
+         telefone = COALESCE(EXCLUDED.telefone, talentos.telefone),
          area_interesse = COALESCE(EXCLUDED.area_interesse, talentos.area_interesse),
          linkedin = COALESCE(EXCLUDED.linkedin, talentos.linkedin),
          mensagem = COALESCE(EXCLUDED.mensagem, talentos.mensagem),
          territorio = COALESCE(EXCLUDED.territorio, talentos.territorio),
+         maioridade = EXCLUDED.maioridade,
          consentimento = EXCLUDED.consentimento,
          atualizado_em = now()
-       RETURNING id, nome, email, area_interesse, linkedin, mensagem, territorio, consentimento, criado_em, atualizado_em,
+       RETURNING id, nome, email, telefone, area_interesse, linkedin, mensagem, territorio, maioridade, consentimento, criado_em, atualizado_em,
                  (criado_em = atualizado_em) AS novo`,
-      [dados.nome, dados.email, dados.area_interesse, dados.linkedin, dados.mensagem, dados.territorio, dados.consentimento]
+      [dados.nome, dados.email, dados.telefone, dados.area_interesse, dados.linkedin, dados.mensagem, dados.territorio, dados.maioridade, dados.consentimento]
     );
     res.status(rows[0].novo ? 201 : 200).json(rows[0]);
   })
@@ -44,7 +46,7 @@ router.get(
   exigirChaveAdmin,
   asy(async (req, res) => {
     const { rows } = await query(
-      `SELECT id, nome, email, area_interesse, linkedin, mensagem, territorio, consentimento, criado_em, atualizado_em
+      `SELECT id, nome, email, telefone, area_interesse, linkedin, mensagem, territorio, maioridade, consentimento, criado_em, atualizado_em
        FROM talentos ORDER BY criado_em DESC`
     );
     res.json({ total: rows.length, talentos: rows });

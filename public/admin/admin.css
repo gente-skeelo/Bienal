@@ -171,6 +171,16 @@ legend { padding: 0 0.4rem; font-size: 0.9rem; color: var(--texto-suave); }
 .cartao-livro { font-weight: 700; }
 .cartao-detalhe { color: var(--texto-suave); font-size: 0.9rem; }
 
+/* Foto do Skeeler: previa redonda no formulario e miniatura no cartao. */
+.foto-campo { display: flex; align-items: center; gap: 1rem; }
+.foto-campo-texto { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+.foto-campo-texto .botao.mini { align-self: flex-start; }
+.foto-previa {
+  width: 4.5rem; height: 4.5rem; border-radius: 50%; object-fit: cover;
+  border: 2px solid var(--acento); flex: 0 0 auto;
+}
+.cartao-foto { width: 2rem; height: 2rem; border-radius: 50%; object-fit: cover; border: 1px solid var(--acento); }
+
 /* Cores por territorio, iguais as do app: aprender verde, evoluir roxo,
    imaginar laranja. */
 .etiqueta {

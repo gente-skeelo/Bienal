@@ -186,11 +186,17 @@ aparece quando existe história para abrir.
 | `DELETE` | `/api/historias/:id` | remove história |
 
 Campos: `territorio` (obrigatório: `aprender`, `evoluir` ou `imaginar`),
-`livro`, `citacao`, `skeeler_nome`, `skeeler_cargo` (obrigatórios), `resumo`
-(mini trajetória em uma linha), `trajetoria` (lista de marcos
+`livro`, `citacao`, `skeeler_nome`, `skeeler_cargo` (obrigatórios), `indicacao`
+("Indicação do Skeelo": o livro que temos no acervo, exibido abaixo da
+citação), `foto` (foto do Skeeler como data URL de imagem — o painel recorta em
+quadrado e reduz para 320px antes de enviar; máximo 150 mil caracteres),
+`resumo` (mini trajetória em uma linha), `trajetoria` (lista de marcos
 `{"quando": "2022", "marco": "Entrou como Software Engineer"}`), `livro_url`
-(o CTA "Conhecer o livro no Skeelo" só aparece quando há link garantido),
+(link da indicação no Skeelo — o CTA só aparece quando há link garantido),
 `ordem` e `ativo`.
+
+A seleção final tem **uma história por estante** (3 no total). O app não
+depende disso: a estante lista quantas histórias estiverem ativas.
 
 A leitura é pública (o app monta as estantes com ela); criar, editar e excluir
 exigem `CHAVE_ADMIN` quando a variável está definida.
@@ -199,13 +205,24 @@ exigem `CHAVE_ADMIN` quando a variável está definida.
 
 | Método | Rota | O que faz |
 | --- | --- | --- |
-| `POST` | `/api/talentos` | inscrição vinda do app (`nome`, `email` e `consentimento: true` obrigatórios; `area_interesse`, `linkedin`, `mensagem`, `territorio` opcionais) |
+| `POST` | `/api/talentos` | inscrição vinda do app (`nome`, `email`, `maioridade: true` e `consentimento: true` obrigatórios; `telefone`, `area_interesse`, `linkedin`, `mensagem`, `territorio` opcionais) |
 | `GET` | `/api/talentos` | listagem para o time de People |
 
 Reinscrição com o mesmo e-mail atualiza o cadastro em vez de duplicar. A
 listagem expõe dados pessoais: defina **`CHAVE_ADMIN`** no ambiente (ver
 `.env.example`) para exigir `Authorization: Bearer <chave>` — sem a variável a
 rota fica aberta, o que serve só para desenvolvimento.
+
+O consentimento do formulário declara um **prazo de guarda de 12 meses**. Ele
+está na copy da tela, não no banco: nada expira sozinho, então a limpeza dos
+cadastros vencidos é do time de People. O canal de remoção divulgado no app é
+**gente@skeelo.com**.
+
+O formulário também exige a **declaração de 18 anos ou mais**, gravada em
+`talentos.maioridade` — consentimento só vale de quem tem capacidade civil, e
+declaração que não fica registrada não serve de prova depois. O que ainda falta
+para fechar o checklist da LGPD é uma **política de privacidade** linkada no
+formulário (art. 9º) e a indicação do **encarregado** (art. 41).
 
 ### Analytics essenciais
 
