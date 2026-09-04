@@ -135,6 +135,11 @@ isso desde a tela de entrada. O **voucher do livro não é entregue na hora**:
 é enviado depois por e-mail, como ação de CRM, a partir dos cadastros da
 Estante de Talentos.
 
+Por isso o app separa as duas recompensas em todas as telas: o **brinde** sai
+na hora, no estande; o **livro** depende do cadastro e chega por e-mail. Ao
+mexer nessa copy, mantenha a regra — o livro nunca aparece como prêmio
+imediato nem como algo garantido antes da inscrição na estante.
+
 O time ajusta tudo pelo **painel de gestão em `/admin`** — sem mexer em
 código nem fazer deploy:
 

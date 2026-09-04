@@ -194,6 +194,16 @@ h3 {
   box-shadow: 0 0 22px rgba(198, 241, 63, 0.12);
 }
 
+/* A condicao do livro (so com o cadastro, e depois, por e-mail) entra em letra
+   miuda: o aviso do brinde continua leve na entrada, sem virar paragrafo. */
+.brinde span {
+  display: block;
+  margin-top: 0.35rem;
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
 /* Botoes grandes: a experiencia roda em tablet e celular, em pe, no estande. */
 .acoes { display: flex; flex-direction: column; gap: 0.75rem; }
 
