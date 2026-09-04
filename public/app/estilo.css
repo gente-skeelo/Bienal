@@ -112,6 +112,7 @@ body::before {
 @media (prefers-reduced-motion: reduce) {
   .tela, .livro-animado, .capa, .livro-hero svg { animation: none; }
   .urna-ilustracao svg, .urna-bilhete, .urna-fagulhas { animation: none; }
+  .vale svg, .vale-fagulhas { animation: none; }
   .capa::after { animation: none; }
   .fagulhas i { animation: none; opacity: 0.35; }
 }
@@ -504,6 +505,30 @@ form input:focus, form textarea:focus { outline: 2px solid var(--acento); border
 .consentimento input { width: 1.25rem; height: 1.25rem; margin-top: 0.15rem; accent-color: var(--acento); }
 
 .erro { color: #ffb4a8; font-size: 0.9rem; }
+
+/* Vale do livro: aparece na confirmacao do cadastro, como imagem do que a
+   pessoa acabou de garantir. O voucher de verdade chega por e-mail. */
+.vale { display: flex; justify-content: center; }
+.vale svg {
+  width: 13rem;
+  max-width: 100%;
+  filter: drop-shadow(0 0 20px rgba(240, 207, 125, 0.5));
+  animation: flutuar 3.5s ease-in-out infinite;
+}
+.vale-mini {
+  font-family: var(--fonte-titulo);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  fill: #02271c;
+}
+.vale-forte {
+  font-family: var(--fonte-titulo);
+  font-size: 15px;
+  font-weight: 800;
+  fill: #02271c;
+}
+.vale-fagulhas { animation: urna-fagulhas 2.4s ease-in-out infinite; }
 
 /* Urna: o fechamento em dourado - o mesmo fio do Bilhete Dourado. */
 body.final .livro-animado { filter: drop-shadow(0 0 24px rgba(240, 207, 125, 0.75)); }

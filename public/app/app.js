@@ -430,6 +430,7 @@ async function enviarTalento(evento) {
   const dados = {
     nome: form.nome.value.trim(),
     email: form.email.value.trim(),
+    telefone: form.telefone.value.trim() || null,
     area_interesse: form.area_interesse.value.trim() || null,
     linkedin: form.linkedin.value.trim() || null,
     mensagem: form.mensagem.value.trim() || null,

@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS talentos (
   id             SERIAL PRIMARY KEY,
   nome           TEXT    NOT NULL,
   email          TEXT    NOT NULL,
+  telefone       TEXT,
   area_interesse TEXT,
   linkedin       TEXT,
   mensagem       TEXT,   -- "conte um pouco sobre sua trajetoria"
@@ -53,6 +54,10 @@ CREATE TABLE IF NOT EXISTS talentos (
   criado_em      TIMESTAMPTZ NOT NULL DEFAULT now(),
   atualizado_em  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Coluna adicionada depois do primeiro deploy: o CREATE TABLE acima so vale
+-- para banco novo, entao bancos que ja existiam precisam do ALTER.
+ALTER TABLE talentos ADD COLUMN IF NOT EXISTS telefone TEXT;
 
 -- Quem se inscreve duas vezes atualiza o proprio cadastro em vez de duplicar.
 CREATE UNIQUE INDEX IF NOT EXISTS talentos_email_idx ON talentos (lower(email));

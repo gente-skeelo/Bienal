@@ -171,6 +171,7 @@ test('POST /api/talentos cria e reinscricao com o mesmo e-mail atualiza', async 
     corpo: {
       nome: 'Visitante',
       email: 'Visitante@Exemplo.com',
+      telefone: '(11) 91234-5678',
       area_interesse: 'Produto',
       territorio: 'imaginar',
       consentimento: true,
@@ -186,6 +187,7 @@ test('POST /api/talentos cria e reinscricao com o mesmo e-mail atualiza', async 
   assert.equal(segunda.status, 200); // atualizou em vez de duplicar
   assert.equal(segunda.corpo.nome, 'Visitante Silva');
   assert.equal(segunda.corpo.area_interesse, 'Produto'); // preservado
+  assert.equal(segunda.corpo.telefone, '(11) 91234-5678'); // preservado
   assert.equal(segunda.corpo.territorio, 'imaginar'); // preservado
 
   const lista = await req('/api/talentos');

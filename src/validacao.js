@@ -216,7 +216,7 @@ function validarTalento(corpo) {
     return { erros: ['O corpo da requisicao precisa ser um objeto JSON.'] };
   }
 
-  const campos = ['nome', 'email', 'area_interesse', 'linkedin', 'mensagem', 'territorio', 'consentimento'];
+  const campos = ['nome', 'email', 'telefone', 'area_interesse', 'linkedin', 'mensagem', 'territorio', 'consentimento'];
   const desconhecidos = Object.keys(corpo).filter((campo) => !campos.includes(campo));
   if (desconhecidos.length > 0) {
     erros.push(`Campos nao reconhecidos: ${desconhecidos.join(', ')}.`);
@@ -242,7 +242,7 @@ function validarTalento(corpo) {
     dados.consentimento = true;
   }
 
-  for (const campo of ['area_interesse', 'linkedin', 'mensagem']) {
+  for (const campo of ['telefone', 'area_interesse', 'linkedin', 'mensagem']) {
     if (corpo[campo] === undefined || corpo[campo] === null) {
       dados[campo] = null;
     } else if (typeof corpo[campo] !== 'string') {

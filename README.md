@@ -199,13 +199,17 @@ exigem `CHAVE_ADMIN` quando a variável está definida.
 
 | Método | Rota | O que faz |
 | --- | --- | --- |
-| `POST` | `/api/talentos` | inscrição vinda do app (`nome`, `email` e `consentimento: true` obrigatórios; `area_interesse`, `linkedin`, `mensagem`, `territorio` opcionais) |
+| `POST` | `/api/talentos` | inscrição vinda do app (`nome`, `email` e `consentimento: true` obrigatórios; `telefone`, `area_interesse`, `linkedin`, `mensagem`, `territorio` opcionais) |
 | `GET` | `/api/talentos` | listagem para o time de People |
 
 Reinscrição com o mesmo e-mail atualiza o cadastro em vez de duplicar. A
 listagem expõe dados pessoais: defina **`CHAVE_ADMIN`** no ambiente (ver
 `.env.example`) para exigir `Authorization: Bearer <chave>` — sem a variável a
 rota fica aberta, o que serve só para desenvolvimento.
+
+O consentimento do formulário declara um **prazo de guarda de 12 meses**. Ele
+está na copy da tela, não no banco: nada expira sozinho, então a limpeza dos
+cadastros vencidos é do time de People.
 
 ### Analytics essenciais
 

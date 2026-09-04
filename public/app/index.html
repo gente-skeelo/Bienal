@@ -270,6 +270,9 @@
           <label>E-mail
             <input type="email" name="email" autocomplete="email" inputmode="email" required>
           </label>
+          <label>Telefone
+            <input type="tel" name="telefone" autocomplete="tel" inputmode="tel" placeholder="(11) 90000-0000">
+          </label>
           <label>Área de interesse
             <input type="text" name="area_interesse" placeholder="Ex.: Engenharia, Produto, Marketing...">
           </label>
@@ -281,7 +284,7 @@
           </label>
           <label class="consentimento">
             <input type="checkbox" name="consentimento">
-            <span>Autorizo o Skeelo a guardar meus dados e entrar em contato sobre conteúdos e oportunidades de carreira. Posso pedir a remoção quando quiser.</span>
+            <span>Autorizo o Skeelo a guardar meus dados por até 12 meses e entrar em contato sobre conteúdos e oportunidades de carreira. Posso pedir a remoção quando quiser.</span>
           </label>
           <p class="erro" id="talentos-erro" hidden></p>
           <button class="botao principal" type="submit" id="btn-enviar-talento">Fazer parte da Estante de Talentos</button>
@@ -292,7 +295,58 @@
     <!-- Confirmação da Estante de Talentos -->
     <section class="tela centro" id="tela-talentos-ok" hidden>
       <div class="miolo">
-        <div class="livro-animado" aria-hidden="true">✨</div>
+        <!-- Vale do livro: a imagem do que a pessoa acabou de garantir com o
+             cadastro. O voucher em si chega por e-mail; isto e o simbolo dele. -->
+        <div class="vale">
+          <svg viewBox="0 0 200 116" role="img" aria-labelledby="vale-titulo">
+            <title id="vale-titulo">Vale um livro no Skeelo</title>
+            <defs>
+              <linearGradient id="vale-ouro" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0" stop-color="#e0b04e"/>
+                <stop offset="0.55" stop-color="#f7e4ab"/>
+                <stop offset="1" stop-color="#e0b04e"/>
+              </linearGradient>
+              <radialGradient id="vale-luz" cx="0.5" cy="0.5" r="0.6">
+                <stop offset="0" stop-color="#f0cf7d" stop-opacity="0.45"/>
+                <stop offset="1" stop-color="#f0cf7d" stop-opacity="0"/>
+              </radialGradient>
+              <filter id="vale-suave" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="7"/>
+              </filter>
+              <!-- Os furos do picote sao recortados por mascara: circulo cheio
+                   apareceria como bolinha sobre o fundo em degrade. -->
+              <mask id="vale-recorte">
+                <rect width="200" height="116" fill="#fff"/>
+                <circle cx="14" cy="58" r="9" fill="#000"/>
+                <circle cx="186" cy="58" r="9" fill="#000"/>
+              </mask>
+            </defs>
+
+            <g filter="url(#vale-suave)">
+              <ellipse cx="100" cy="58" rx="78" ry="40" fill="url(#vale-luz)"/>
+            </g>
+
+            <rect x="14" y="22" width="172" height="72" rx="11" fill="url(#vale-ouro)" mask="url(#vale-recorte)"/>
+
+            <!-- Picote entre o canhoto e o vale. -->
+            <path d="M70 32 V84" stroke="#8a6a1f" stroke-width="2" stroke-linecap="round"
+                  stroke-dasharray="4 6" opacity="0.55"/>
+
+            <!-- Canhoto: o livro aberto da marca. -->
+            <path d="M42 48 C37.5 44.5 31 43.5 26 45 L26 68 C31 66.5 37.5 67.5 42 71
+                     C46.5 67.5 53 66.5 58 68 L58 45 C53 43.5 46.5 44.5 42 48 Z"
+                  fill="#02271c" opacity="0.85"/>
+            <path d="M42 48 L42 71" stroke="#f7e4ab" stroke-width="2.4" stroke-linecap="round"/>
+
+            <text class="vale-mini" x="129" y="49" text-anchor="middle">VALE</text>
+            <text class="vale-forte" x="128" y="72" text-anchor="middle">UM LIVRO</text>
+
+            <g class="vale-fagulhas" fill="#f0cf7d">
+              <path d="M20 8 l2.4 5.2 5.2 2.4 -5.2 2.4 -2.4 5.2 -2.4 -5.2 -5.2 -2.4 5.2 -2.4 Z"/>
+              <path d="M180 96 l2 4.4 4.4 2 -4.4 2 -2 4.4 -2 -4.4 -4.4 -2 4.4 -2 Z"/>
+            </g>
+          </svg>
+        </div>
         <h2>Sua história agora faz parte da nossa estante.</h2>
         <p class="apoio">O voucher do seu livro de presente chega em breve, no e-mail que você acabou de cadastrar.</p>
         <p class="apoio">E ainda tem mais um capítulo esperando por você no estande.</p>
