@@ -3,7 +3,7 @@
 const { migrar } = require('./migrar');
 const { query, pool } = require('./db');
 
-// Historias de exemplo das Estantes dos Skeelers (3 por territorio), no formato
+// Historias de exemplo das Estantes dos Skeelers (1 por territorio), no formato
 // do rascunho do app. Sao placeholders: as historias reais entram pela API
 // (POST /api/historias) quando a selecao interna terminar.
 const HISTORIAS = [
@@ -23,32 +23,6 @@ const HISTORIAS = [
     ordem: 1,
   },
   {
-    territorio: 'aprender',
-    livro: '[Livro 2 — Aprender]',
-    citacao: 'Essa história trouxe o repertório que eu precisava para o meu primeiro grande desafio.',
-    skeeler_nome: 'Skeeler B',
-    skeeler_cargo: 'Cargo',
-    resumo: 'Nova habilidade → prática → novo patamar',
-    trajetoria: [
-      { quando: '2022', marco: 'Entrou no Skeelo' },
-      { quando: 'Hoje', marco: 'Aplica a habilidade em projetos maiores' },
-    ],
-    ordem: 2,
-  },
-  {
-    territorio: 'aprender',
-    livro: '[Livro 3 — Aprender]',
-    citacao: 'Aprender com essa história mudou meu jeito de trabalhar.',
-    skeeler_nome: 'Skeeler C',
-    skeeler_cargo: 'Cargo',
-    resumo: 'Curiosidade → especialização',
-    trajetoria: [
-      { quando: '2024', marco: 'Entrou no Skeelo' },
-      { quando: 'Hoje', marco: 'Se especializou na área' },
-    ],
-    ordem: 3,
-  },
-  {
     territorio: 'evoluir',
     livro: '[Livro 1 — Evoluir]',
     indicacao: '[Indicação do Skeelo — Evoluir]',
@@ -65,32 +39,6 @@ const HISTORIAS = [
     ordem: 1,
   },
   {
-    territorio: 'evoluir',
-    livro: '[Livro 2 — Evoluir]',
-    citacao: 'Essa história chegou quando eu precisava mudar minha forma de trabalhar.',
-    skeeler_nome: 'João',
-    skeeler_cargo: 'Product Manager',
-    resumo: 'Novo escopo → nova forma de trabalhar',
-    trajetoria: [
-      { quando: '2023', marco: 'Entrou no Skeelo' },
-      { quando: 'Hoje', marco: 'Cuida de um escopo maior' },
-    ],
-    ordem: 2,
-  },
-  {
-    territorio: 'evoluir',
-    livro: '[Livro 3 — Evoluir]',
-    citacao: 'Essa história me acompanhou em uma virada importante da minha carreira.',
-    skeeler_nome: 'Skeeler D',
-    skeeler_cargo: 'Cargo',
-    resumo: 'Desafio → transformação',
-    trajetoria: [
-      { quando: '2021', marco: 'Entrou no Skeelo' },
-      { quando: 'Hoje', marco: 'Atua em um novo patamar' },
-    ],
-    ordem: 3,
-  },
-  {
     territorio: 'imaginar',
     livro: '[Livro 1 — Imaginar]',
     indicacao: '[Indicação do Skeelo — Imaginar]',
@@ -104,32 +52,6 @@ const HISTORIAS = [
       { quando: 'Hoje', marco: 'Constrói o novo caminho' },
     ],
     ordem: 1,
-  },
-  {
-    territorio: 'imaginar',
-    livro: '[Livro 2 — Imaginar]',
-    citacao: 'Essa história abriu a pergunta “e se?” que mudou minha rota.',
-    skeeler_nome: 'Skeeler F',
-    skeeler_cargo: 'Cargo',
-    resumo: 'Pergunta “e se?” → mudança de rota',
-    trajetoria: [
-      { quando: '2023', marco: 'Entrou no Skeelo' },
-      { quando: 'Hoje', marco: 'Explora um caminho diferente' },
-    ],
-    ordem: 2,
-  },
-  {
-    territorio: 'imaginar',
-    livro: '[Livro 3 — Imaginar]',
-    citacao: 'Essa história me ajudou a imaginar o que poderia vir depois.',
-    skeeler_nome: 'Skeeler G',
-    skeeler_cargo: 'Cargo',
-    resumo: 'Visão de futuro → novo projeto',
-    trajetoria: [
-      { quando: '2024', marco: 'Entrou no Skeelo' },
-      { quando: 'Hoje', marco: 'Tira uma ideia nova do papel' },
-    ],
-    ordem: 3,
   },
 ];
 

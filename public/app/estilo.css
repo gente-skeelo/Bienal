@@ -417,20 +417,6 @@ h3 {
 }
 .indicacao-livro { font-family: var(--fonte-titulo); font-weight: 700; }
 
-/* Convite dentro de um paragrafo ("Veja algumas delas aqui."): e um <button>
-   para nao fingir navegacao, mas se comporta como link no meio do texto. */
-.link-inline {
-  border: 0;
-  padding: 0;
-  background: none;
-  font: inherit;
-  color: var(--lima);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-  cursor: pointer;
-}
-.link-inline:focus-visible { outline: 3px solid var(--lima); outline-offset: 2px; }
-
 /* Trajetoria */
 .linha-tempo { list-style: none; display: flex; flex-direction: column; }
 
