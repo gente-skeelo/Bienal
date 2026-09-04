@@ -34,6 +34,8 @@ const HISTORIA = {
   territorio: 'evoluir',
   livro: 'Livro de teste',
   citacao: 'Esse livro me acompanhou quando assumi meu primeiro desafio como lideranca.',
+  indicacao: 'Livro do acervo — Autora',
+  foto: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AVN//2Q==',
   skeeler_nome: 'Mariana',
   skeeler_cargo: 'Engineering Manager',
   resumo: 'Software Engineer -> novos projetos -> lideranca',
@@ -81,7 +83,30 @@ test('POST /api/historias cria uma historia completa', async () => {
   assert.equal(corpo.territorio, 'evoluir');
   assert.equal(corpo.skeeler_nome, 'Mariana');
   assert.equal(corpo.ativo, true);
+  assert.equal(corpo.indicacao, 'Livro do acervo — Autora');
+  assert.ok(corpo.foto.startsWith('data:image/jpeg;base64,'));
   assert.deepEqual(corpo.trajetoria[0], { quando: '2022', marco: 'Entrou como Software Engineer' });
+});
+
+test('POST /api/historias valida a foto (data URL de imagem, tamanho limitado) e aceita null', async () => {
+  const naoImagem = await req('/api/historias', { method: 'POST', corpo: { ...HISTORIA, foto: 'https://exemplo.com/foto.jpg' } });
+  assert.equal(naoImagem.status, 400);
+  assert.ok(naoImagem.corpo.erros.some((e) => e.includes('foto')));
+
+  const grande = await req('/api/historias', {
+    method: 'POST',
+    corpo: { ...HISTORIA, foto: 'data:image/jpeg;base64,' + 'A'.repeat(160000) },
+  });
+  assert.equal(grande.status, 400);
+  assert.ok(grande.corpo.erros.some((e) => e.includes('grande')));
+
+  const semFoto = await req('/api/historias', { method: 'POST', corpo: { ...HISTORIA, foto: null, indicacao: null } });
+  assert.equal(semFoto.status, 201);
+  assert.equal(semFoto.corpo.foto, null);
+  assert.equal(semFoto.corpo.indicacao, null);
+
+  // Limpa para nao alterar as contagens dos testes de filtro que vem depois.
+  assert.equal((await req(`/api/historias/${semFoto.corpo.id}`, { method: 'DELETE' })).status, 204);
 });
 
 test('POST /api/historias valida territorio, campos obrigatorios e trajetoria', async () => {

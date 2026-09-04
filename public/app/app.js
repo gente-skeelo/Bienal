@@ -300,11 +300,28 @@ function montarCartao(historia) {
   citacao.className = 'cartao-citacao';
   citacao.textContent = `“${historia.citacao}”`;
 
-  const skeeler = document.createElement('p');
-  skeeler.className = 'cartao-skeeler';
-  skeeler.textContent = `${historia.skeeler_nome} · ${historia.skeeler_cargo}`;
+  cartao.append(livro, citacao);
 
-  cartao.append(livro, citacao, skeeler);
+  // "Indicacao do Skeelo": o livro que temos no acervo, logo abaixo da citacao.
+  if (historia.indicacao) {
+    cartao.appendChild(montarIndicacao(historia.indicacao));
+  }
+
+  // Skeeler: foto redonda (quando ha) + nome e cargo.
+  const skeeler = document.createElement('div');
+  skeeler.className = 'skeeler';
+  if (historia.foto) {
+    const foto = document.createElement('img');
+    foto.className = 'skeeler-foto';
+    foto.src = historia.foto;
+    foto.alt = '';
+    skeeler.appendChild(foto);
+  }
+  const nome = document.createElement('p');
+  nome.className = 'cartao-skeeler';
+  nome.textContent = `${historia.skeeler_nome} · ${historia.skeeler_cargo}`;
+  skeeler.appendChild(nome);
+  cartao.appendChild(skeeler);
 
   if (historia.resumo) {
     const resumo = document.createElement('p');
@@ -321,6 +338,19 @@ function montarCartao(historia) {
   cartao.appendChild(botao);
 
   return cartao;
+}
+
+function montarIndicacao(titulo) {
+  const bloco = document.createElement('div');
+  bloco.className = 'indicacao';
+  const rotulo = document.createElement('p');
+  rotulo.className = 'indicacao-rotulo';
+  rotulo.textContent = 'Indicação do Skeelo';
+  const livro = document.createElement('p');
+  livro.className = 'indicacao-livro';
+  livro.textContent = titulo;
+  bloco.append(rotulo, livro);
+  return bloco;
 }
 
 // Estante sem história publicada para o territorio: em vez de mandar o visitante
@@ -378,6 +408,13 @@ function mostrarTrajetoria(historia) {
   $('trajetoria-livro').textContent = `📚 ${historia.livro}`;
   $('trajetoria-citacao').textContent = `“${historia.citacao}”`;
 
+  const foto = $('trajetoria-foto');
+  foto.hidden = !historia.foto;
+  foto.src = historia.foto || '';
+
+  $('trajetoria-indicacao').hidden = !historia.indicacao;
+  $('trajetoria-indicacao-livro').textContent = historia.indicacao || '';
+
   const linha = $('trajetoria-linha');
   linha.innerHTML = '';
   for (const marco of historia.trajetoria || []) {
@@ -392,9 +429,11 @@ function mostrarTrajetoria(historia) {
 
   // So oferecemos o CTA do livro quando ha link garantido: ninguem deve
   // encontrar uma barreira de acesso depois do convite.
+  // O link e do livro que temos no acervo: com indicacao, o botao fala dela.
   const botaoLivro = $('btn-livro');
   if (historia.livro_url) {
     botaoLivro.href = historia.livro_url;
+    botaoLivro.textContent = historia.indicacao ? 'Ler a indicação no Skeelo' : 'Conhecer o livro no Skeelo';
     botaoLivro.hidden = false;
     botaoLivro.onclick = () => registrar('book_clicked', { territorio: estado.territorio, historia_id: historia.id });
   } else {

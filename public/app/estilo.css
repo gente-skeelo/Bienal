@@ -385,6 +385,38 @@ h3 {
 
 .cartao .botao { margin-top: 0.5rem; }
 
+/* Skeeler: foto redonda com anel na cor do territorio. Sem foto, sobra so o
+   texto - o bloco nao deixa buraco. */
+.skeeler { display: flex; align-items: center; gap: 0.75rem; }
+.skeeler-foto {
+  flex: 0 0 auto;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--acento);
+  box-shadow: 0 0 14px var(--brilho);
+  background: var(--cartao);
+}
+.skeeler-foto.grande { width: 4.5rem; height: 4.5rem; border-width: 3px; }
+.skeeler h2 { line-height: 1.2; }
+
+/* "Indicacao do Skeelo": o livro do acervo, logo abaixo da citacao. Dourado,
+   como todo momento "livro" da experiencia. */
+.indicacao {
+  padding: 0.6rem 0.85rem;
+  border-left: 3px solid var(--dourado-forte);
+  border-radius: 0 0.75rem 0.75rem 0;
+  background: rgba(224, 176, 78, 0.08);
+}
+.indicacao-rotulo {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--dourado);
+}
+.indicacao-livro { font-family: var(--fonte-titulo); font-weight: 700; }
+
 /* Convite dentro de um paragrafo ("Veja algumas delas aqui."): e um <button>
    para nao fingir navegacao, mas se comporta como link no meio do texto. */
 .link-inline {

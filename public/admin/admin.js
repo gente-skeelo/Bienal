@@ -123,6 +123,13 @@ function renderizarHistorias() {
     livro.className = 'cartao-livro';
     livro.textContent = `📚 ${historia.livro}`;
     topo.appendChild(livro);
+    if (historia.foto) {
+      const foto = document.createElement('img');
+      foto.className = 'cartao-foto';
+      foto.src = historia.foto;
+      foto.alt = '';
+      topo.appendChild(foto);
+    }
     cartao.appendChild(topo);
 
     const skeeler = document.createElement('p');
@@ -134,6 +141,13 @@ function renderizarHistorias() {
     citacao.className = 'cartao-detalhe';
     citacao.textContent = `“${historia.citacao}”`;
     cartao.appendChild(citacao);
+
+    if (historia.indicacao) {
+      const indicacao = document.createElement('p');
+      indicacao.className = 'cartao-detalhe';
+      indicacao.textContent = `Indicação do Skeelo: ${historia.indicacao}`;
+      cartao.appendChild(indicacao);
+    }
 
     const acoes = document.createElement('div');
     acoes.className = 'cartao-acoes';
@@ -194,9 +208,64 @@ function linhaMarco(quando = '', marco = '') {
 
 $('btn-add-marco').addEventListener('click', () => $('marcos').appendChild(linhaMarco()));
 
+// Foto: `undefined` = nao mexeu (o PATCH nao envia o campo e a foto atual fica);
+// string = foto nova; null = pediu para remover.
+let fotoEscolhida;
+
+function mostrarPreviaFoto(dataUrl) {
+  const previa = $('foto-previa');
+  previa.hidden = !dataUrl;
+  previa.src = dataUrl || '';
+  $('btn-remover-foto').hidden = !dataUrl;
+}
+
+// Recorta em quadrado (centro) e reduz para 320px em JPEG: a foto vai em
+// base64 dentro do JSON da historia, entao precisa nascer pequena.
+function reduzirFoto(arquivo) {
+  return new Promise((resolver, rejeitar) => {
+    const url = URL.createObjectURL(arquivo);
+    const imagem = new Image();
+    imagem.onload = () => {
+      URL.revokeObjectURL(url);
+      const LADO = 320;
+      const corte = Math.min(imagem.naturalWidth, imagem.naturalHeight);
+      const sx = (imagem.naturalWidth - corte) / 2;
+      const sy = (imagem.naturalHeight - corte) / 2;
+      const tela = document.createElement('canvas');
+      tela.width = LADO;
+      tela.height = LADO;
+      tela.getContext('2d').drawImage(imagem, sx, sy, corte, corte, 0, 0, LADO, LADO);
+      resolver(tela.toDataURL('image/jpeg', 0.82));
+    };
+    imagem.onerror = () => { URL.revokeObjectURL(url); rejeitar(new Error('Não consegui ler essa imagem.')); };
+    imagem.src = url;
+  });
+}
+
+$('form-historia').foto_arquivo.addEventListener('change', async (evento) => {
+  const arquivo = evento.target.files[0];
+  if (!arquivo) return;
+  try {
+    fotoEscolhida = await reduzirFoto(arquivo);
+    mostrarPreviaFoto(fotoEscolhida);
+  } catch (e) {
+    $('form-historia-erro').textContent = e.message;
+    $('form-historia-erro').hidden = false;
+  }
+});
+
+$('btn-remover-foto').addEventListener('click', () => {
+  fotoEscolhida = null;
+  $('form-historia').foto_arquivo.value = '';
+  mostrarPreviaFoto(null);
+});
+
 function abrirFormHistoria(historia = null) {
   historiaEditando = historia;
+  fotoEscolhida = undefined;
   const form = $('form-historia');
+  form.foto_arquivo.value = '';
+  mostrarPreviaFoto(historia && historia.foto);
   $('form-historia-titulo').textContent = historia ? `Editando: ${historia.livro}` : 'Nova história';
   $('form-historia-erro').hidden = true;
 
@@ -205,6 +274,7 @@ function abrirFormHistoria(historia = null) {
   form.livro.value = historia ? historia.livro : '';
   form.livro_url.value = (historia && historia.livro_url) || '';
   form.citacao.value = historia ? historia.citacao : '';
+  form.indicacao.value = (historia && historia.indicacao) || '';
   form.skeeler_nome.value = historia ? historia.skeeler_nome : '';
   form.skeeler_cargo.value = historia ? historia.skeeler_cargo : '';
   form.resumo.value = (historia && historia.resumo) || '';
@@ -247,6 +317,7 @@ $('form-historia').addEventListener('submit', async (evento) => {
     livro: form.livro.value.trim(),
     livro_url: form.livro_url.value.trim() || null,
     citacao: form.citacao.value.trim(),
+    indicacao: form.indicacao.value.trim() || null,
     skeeler_nome: form.skeeler_nome.value.trim(),
     skeeler_cargo: form.skeeler_cargo.value.trim(),
     resumo: form.resumo.value.trim() || null,
@@ -254,6 +325,7 @@ $('form-historia').addEventListener('submit', async (evento) => {
     ordem: parseInt(form.ordem.value, 10) || 0,
     ativo: form.ativo.checked,
   };
+  if (fotoEscolhida !== undefined) dados.foto = fotoEscolhida;
 
   try {
     if (historiaEditando) {

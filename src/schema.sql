@@ -27,6 +27,8 @@ CREATE TABLE IF NOT EXISTS historias (
   livro         TEXT    NOT NULL,
   livro_url     TEXT,             -- so exibimos o CTA do livro quando ha link garantido
   citacao       TEXT    NOT NULL, -- "Esse livro me acompanhou quando..."
+  indicacao     TEXT,             -- "Indicacao do Skeelo": o livro que temos no acervo, ligado a historia
+  foto          TEXT,             -- foto do Skeeler como data URL (JPEG base64, reduzida no painel)
   skeeler_nome  TEXT    NOT NULL,
   skeeler_cargo TEXT    NOT NULL,
   resumo        TEXT,             -- mini trajetoria em uma linha: "Software Engineer -> novos projetos -> lideranca"
@@ -36,6 +38,11 @@ CREATE TABLE IF NOT EXISTS historias (
   criado_em     TIMESTAMPTZ NOT NULL DEFAULT now(),
   atualizado_em TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Colunas adicionadas depois do primeiro deploy (o CREATE TABLE so vale para
+-- banco novo).
+ALTER TABLE historias ADD COLUMN IF NOT EXISTS indicacao TEXT;
+ALTER TABLE historias ADD COLUMN IF NOT EXISTS foto TEXT;
 
 CREATE INDEX IF NOT EXISTS historias_territorio_idx ON historias (territorio, ativo, ordem);
 

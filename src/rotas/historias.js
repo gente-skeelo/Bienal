@@ -21,7 +21,7 @@ router.param('id', (req, res, next, id) => {
   next();
 });
 
-const COLUNAS = 'id, territorio, livro, livro_url, citacao, skeeler_nome, skeeler_cargo, resumo, trajetoria, ordem, ativo, criado_em, atualizado_em';
+const COLUNAS = 'id, territorio, livro, livro_url, citacao, indicacao, foto, skeeler_nome, skeeler_cargo, resumo, trajetoria, ordem, ativo, criado_em, atualizado_em';
 
 // GET /api/historias
 // O app usa ?territorio=evoluir para montar a estante do resultado.
@@ -72,14 +72,16 @@ router.post(
     if (erros) return res.status(400).json({ erros });
 
     const { rows } = await query(
-      `INSERT INTO historias (territorio, livro, livro_url, citacao, skeeler_nome, skeeler_cargo, resumo, trajetoria, ordem, ativo)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      `INSERT INTO historias (territorio, livro, livro_url, citacao, indicacao, foto, skeeler_nome, skeeler_cargo, resumo, trajetoria, ordem, ativo)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
        RETURNING ${COLUNAS}`,
       [
         dados.territorio,
         dados.livro,
         dados.livro_url ?? null,
         dados.citacao,
+        dados.indicacao ?? null,
+        dados.foto ?? null,
         dados.skeeler_nome,
         dados.skeeler_cargo,
         dados.resumo ?? null,

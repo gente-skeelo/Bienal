@@ -186,11 +186,17 @@ aparece quando existe história para abrir.
 | `DELETE` | `/api/historias/:id` | remove história |
 
 Campos: `territorio` (obrigatório: `aprender`, `evoluir` ou `imaginar`),
-`livro`, `citacao`, `skeeler_nome`, `skeeler_cargo` (obrigatórios), `resumo`
-(mini trajetória em uma linha), `trajetoria` (lista de marcos
+`livro`, `citacao`, `skeeler_nome`, `skeeler_cargo` (obrigatórios), `indicacao`
+("Indicação do Skeelo": o livro que temos no acervo, exibido abaixo da
+citação), `foto` (foto do Skeeler como data URL de imagem — o painel recorta em
+quadrado e reduz para 320px antes de enviar; máximo 150 mil caracteres),
+`resumo` (mini trajetória em uma linha), `trajetoria` (lista de marcos
 `{"quando": "2022", "marco": "Entrou como Software Engineer"}`), `livro_url`
-(o CTA "Conhecer o livro no Skeelo" só aparece quando há link garantido),
+(link da indicação no Skeelo — o CTA só aparece quando há link garantido),
 `ordem` e `ativo`.
+
+A seleção final tem **uma história por estante** (3 no total). O app não
+depende disso: a estante lista quantas histórias estiverem ativas.
 
 A leitura é pública (o app monta as estantes com ela); criar, editar e excluir
 exigem `CHAVE_ADMIN` quando a variável está definida.

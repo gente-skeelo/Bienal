@@ -63,11 +63,14 @@
         <label>Livro
           <input type="text" name="livro" required placeholder="Título do livro no Skeelo">
         </label>
-        <label>Link do livro no Skeelo (opcional — sem link, o botão não aparece no app)
-          <input type="url" name="livro_url" placeholder="https://...">
-        </label>
         <label>Citação do Skeeler
           <textarea name="citacao" rows="2" required placeholder="Esse livro me acompanhou quando..."></textarea>
+        </label>
+        <label>Indicação do Skeelo (o livro que temos no acervo — aparece abaixo da citação)
+          <input type="text" name="indicacao" placeholder="Título — Autor">
+        </label>
+        <label>Link da indicação no Skeelo (opcional — sem link, o botão não aparece no app)
+          <input type="url" name="livro_url" placeholder="https://...">
         </label>
         <div class="grade">
           <label>Nome do Skeeler
@@ -76,6 +79,15 @@
           <label>Cargo
             <input type="text" name="skeeler_cargo" required>
           </label>
+        </div>
+        <div class="foto-campo">
+          <img id="foto-previa" class="foto-previa" alt="" hidden>
+          <div class="foto-campo-texto">
+            <label>Foto do Skeeler (opcional — o painel recorta em quadrado e reduz antes de enviar)
+              <input type="file" name="foto_arquivo" accept="image/*">
+            </label>
+            <button class="botao secundario mini" type="button" id="btn-remover-foto" hidden>Remover foto</button>
+          </div>
         </div>
         <label>Mini trajetória (uma linha)
           <input type="text" name="resumo" placeholder="Software Engineer → novos projetos → liderança">

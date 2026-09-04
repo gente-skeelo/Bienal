@@ -11,7 +11,9 @@ const config = require('./rotas/config');
 const app = express();
 
 app.use(cors()); // libera o consumo da API por qualquer front (site, app, etc.)
-app.use(express.json());
+// 300 KB em vez dos 100 KB padrao: a foto do Skeeler viaja em base64 no JSON
+// da historia. Continua pequeno o bastante para nao virar porta de abuso.
+app.use(express.json({ limit: '300kb' }));
 
 // App "Proximo Capitulo" (Bienal 2026): experiencia mobile-first acessada por
 // QR Code / tablets no estande. E estatico: todo o conteudo dinamico vem da API.

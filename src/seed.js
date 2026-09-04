@@ -10,6 +10,7 @@ const HISTORIAS = [
   {
     territorio: 'aprender',
     livro: '[Livro 1 — Aprender]',
+    indicacao: '[Indicação do Skeelo — Aprender]',
     citacao: 'Esse livro me acompanhou quando precisei dominar um assunto do zero para um projeto novo.',
     skeeler_nome: 'Skeeler A',
     skeeler_cargo: 'Cargo',
@@ -50,6 +51,7 @@ const HISTORIAS = [
   {
     territorio: 'evoluir',
     livro: '[Livro 1 — Evoluir]',
+    indicacao: '[Indicação do Skeelo — Evoluir]',
     citacao: 'Esse livro me acompanhou quando assumi meu primeiro desafio como liderança.',
     skeeler_nome: 'Mariana',
     skeeler_cargo: 'Engineering Manager',
@@ -91,6 +93,7 @@ const HISTORIAS = [
   {
     territorio: 'imaginar',
     livro: '[Livro 1 — Imaginar]',
+    indicacao: '[Indicação do Skeelo — Imaginar]',
     citacao: 'Esse livro me fez enxergar um caminho que eu ainda não tinha considerado.',
     skeeler_nome: 'Skeeler E',
     skeeler_cargo: 'Cargo',
@@ -223,12 +226,13 @@ async function semearHistorias() {
 
   for (const historia of HISTORIAS) {
     await query(
-      `INSERT INTO historias (territorio, livro, citacao, skeeler_nome, skeeler_cargo, resumo, trajetoria, ordem)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      `INSERT INTO historias (territorio, livro, citacao, indicacao, skeeler_nome, skeeler_cargo, resumo, trajetoria, ordem)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
       [
         historia.territorio,
         historia.livro,
         historia.citacao,
+        historia.indicacao ?? null,
         historia.skeeler_nome,
         historia.skeeler_cargo,
         historia.resumo,
