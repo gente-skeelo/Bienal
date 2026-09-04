@@ -184,7 +184,72 @@
       <div class="acoes">
         <button class="botao principal" id="btn-talentos">Fazer parte da Estante de Talentos</button>
         <a class="botao secundario" id="btn-vagas" target="_blank" rel="noopener" hidden>Conhecer oportunidades no Skeelo</a>
-        <p class="nota">O cadastro na estante garante seu brinde no estande e o envio do seu livro de presente.</p>
+
+        <!-- Selo da Urna de brindes: a imagem que o visitante mostra para o time
+             que fica com a urna no estande. Dourado, como o Bilhete Dourado. -->
+        <div class="selo-urna">
+          <div class="urna-ilustracao">
+            <svg viewBox="0 0 140 132" role="img" aria-labelledby="urna-svg-titulo">
+              <title id="urna-svg-titulo">Urna de brindes do Skeelo</title>
+              <defs>
+                <linearGradient id="urna-corpo" x1="0" y1="1" x2="1" y2="0">
+                  <stop offset="0" stop-color="#00c38c"/>
+                  <stop offset="1" stop-color="#c6f13f"/>
+                </linearGradient>
+                <linearGradient id="urna-ouro" x1="0" y1="1" x2="1" y2="0">
+                  <stop offset="0" stop-color="#e0b04e"/>
+                  <stop offset="1" stop-color="#f7e4ab"/>
+                </linearGradient>
+                <radialGradient id="urna-luz" cx="0.5" cy="0.28" r="0.62">
+                  <stop offset="0" stop-color="#f0cf7d" stop-opacity="0.5"/>
+                  <stop offset="0.55" stop-color="#f0cf7d" stop-opacity="0.14"/>
+                  <stop offset="1" stop-color="#f0cf7d" stop-opacity="0"/>
+                </radialGradient>
+                <filter id="urna-suave" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="6"/>
+                </filter>
+              </defs>
+
+              <g filter="url(#urna-suave)">
+                <ellipse cx="70" cy="44" rx="48" ry="34" fill="url(#urna-luz)"/>
+              </g>
+
+              <!-- Bilhete dourado entrando na fenda. -->
+              <g transform="rotate(-9 70 24)">
+                <rect x="52" y="8" width="36" height="36" rx="4" fill="url(#urna-ouro)"/>
+                <g stroke="#7a5714" stroke-width="2.2" stroke-linecap="round" opacity="0.5">
+                  <path d="M59 18 h22"/>
+                  <path d="M59 25 h22"/>
+                  <path d="M59 32 h13"/>
+                </g>
+              </g>
+
+              <!-- Corpo da urna. -->
+              <rect x="37" y="58" width="66" height="58" rx="6" fill="url(#urna-corpo)"/>
+
+              <!-- Livro aberto gravado na frente: a marca da estante. -->
+              <path d="M70 80 C64.5 75.5 57 74.5 51 76 L51 96 C57 94.5 64.5 95.5 70 100
+                       C75.5 95.5 83 94.5 89 96 L89 76 C83 74.5 75.5 75.5 70 80 Z"
+                    fill="#f2fbf6" opacity="0.92"/>
+              <path d="M70 80 L70 100" stroke="#02694a" stroke-width="3" stroke-linecap="round"/>
+
+              <!-- Tampa com a fenda e base: os arremates dourados da urna. -->
+              <rect x="30" y="42" width="80" height="18" rx="5" fill="url(#urna-ouro)"/>
+              <rect x="55" y="48" width="30" height="6" rx="3" fill="#02271c" opacity="0.75"/>
+              <rect x="32" y="114" width="76" height="13" rx="5" fill="url(#urna-ouro)"/>
+
+              <!-- Fagulhas douradas. -->
+              <g fill="#f0cf7d">
+                <path d="M22 24 l2.4 5.2 5.2 2.4 -5.2 2.4 -2.4 5.2 -2.4 -5.2 -5.2 -2.4 5.2 -2.4 Z"/>
+                <path d="M117 32 l1.9 4.1 4.1 1.9 -4.1 1.9 -1.9 4.1 -1.9 -4.1 -4.1 -1.9 4.1 -1.9 Z"/>
+                <path d="M118 86 l1.6 3.5 3.5 1.6 -3.5 1.6 -1.6 3.5 -1.6 -3.5 -3.5 -1.6 3.5 -1.6 Z"/>
+              </g>
+            </svg>
+          </div>
+          <p class="selo-urna-titulo">Urna de brindes</p>
+          <p class="nota">O cadastro na estante garante seu brinde no estande e o envio do seu livro de presente.</p>
+          <p class="nota">Mostre esta tela para o time da urna para retirar o seu.</p>
+        </div>
       </div>
     </section>
 

@@ -110,7 +110,7 @@ body::before {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tela, .livro-animado, .capa, .livro-hero svg { animation: none; }
+  .tela, .livro-animado, .capa, .livro-hero svg, .urna-ilustracao svg { animation: none; }
   .capa::after { animation: none; }
   .fagulhas i { animation: none; opacity: 0.35; }
 }
@@ -372,6 +372,20 @@ h3 {
 
 .cartao .botao { margin-top: 0.5rem; }
 
+/* Convite dentro de um paragrafo ("Veja algumas delas aqui."): e um <button>
+   para nao fingir navegacao, mas se comporta como link no meio do texto. */
+.link-inline {
+  border: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  color: var(--lima);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+.link-inline:focus-visible { outline: 3px solid var(--lima); outline-offset: 2px; }
+
 /* Trajetoria */
 .linha-tempo { list-style: none; display: flex; flex-direction: column; }
 
@@ -402,6 +416,34 @@ h3 {
   letter-spacing: 0;
   color: var(--texto);
   font-size: 1.4rem;
+}
+
+/* Selo da Urna de brindes: sinal visual que o visitante mostra para o time que
+   fica com a urna no estande. Fica no dourado reservado aos momentos magicos. */
+.selo-urna {
+  margin-top: 0.5rem;
+  padding: 1rem 1.25rem 1.1rem;
+  border: 1px solid rgba(224, 176, 78, 0.45);
+  border-radius: 1.25rem;
+  background: rgba(224, 176, 78, 0.08);
+  box-shadow: 0 0 24px rgba(224, 176, 78, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+.urna-ilustracao svg {
+  display: block;
+  width: 6.5rem;
+  filter: drop-shadow(0 0 20px rgba(240, 207, 125, 0.5));
+  animation: flutuar 3.5s ease-in-out infinite;
+}
+.selo-urna-titulo {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--dourado);
+  text-align: center;
 }
 
 /* Formulario da Estante de Talentos */

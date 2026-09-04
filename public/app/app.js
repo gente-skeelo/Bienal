@@ -279,44 +279,95 @@ async function mostrarEstante() {
 
   lista.innerHTML = '';
   if (estado.historias.length === 0) {
-    lista.innerHTML = '<p class="apoio">As histórias desta estante estão sendo escritas. Converse com um Skeeler no estande para conhecê-las.</p>';
+    await montarEstanteVazia(lista);
     return;
   }
 
   for (const historia of estado.historias) {
-    const cartao = document.createElement('article');
-    cartao.className = 'cartao';
-
-    const livro = document.createElement('p');
-    livro.className = 'cartao-livro';
-    livro.textContent = `📚 ${historia.livro}`;
-
-    const citacao = document.createElement('blockquote');
-    citacao.className = 'cartao-citacao';
-    citacao.textContent = `“${historia.citacao}”`;
-
-    const skeeler = document.createElement('p');
-    skeeler.className = 'cartao-skeeler';
-    skeeler.textContent = `${historia.skeeler_nome} · ${historia.skeeler_cargo}`;
-
-    cartao.append(livro, citacao, skeeler);
-
-    if (historia.resumo) {
-      const resumo = document.createElement('p');
-      resumo.className = 'cartao-resumo';
-      resumo.textContent = historia.resumo;
-      cartao.appendChild(resumo);
-    }
-
-    const botao = document.createElement('button');
-    botao.className = 'botao secundario';
-    botao.type = 'button';
-    botao.textContent = 'Conhecer essa história';
-    botao.addEventListener('click', () => mostrarTrajetoria(historia));
-    cartao.appendChild(botao);
-
-    lista.appendChild(cartao);
+    lista.appendChild(montarCartao(historia));
   }
+}
+
+function montarCartao(historia) {
+  const cartao = document.createElement('article');
+  cartao.className = 'cartao';
+
+  const livro = document.createElement('p');
+  livro.className = 'cartao-livro';
+  livro.textContent = `📚 ${historia.livro}`;
+
+  const citacao = document.createElement('blockquote');
+  citacao.className = 'cartao-citacao';
+  citacao.textContent = `“${historia.citacao}”`;
+
+  const skeeler = document.createElement('p');
+  skeeler.className = 'cartao-skeeler';
+  skeeler.textContent = `${historia.skeeler_nome} · ${historia.skeeler_cargo}`;
+
+  cartao.append(livro, citacao, skeeler);
+
+  if (historia.resumo) {
+    const resumo = document.createElement('p');
+    resumo.className = 'cartao-resumo';
+    resumo.textContent = historia.resumo;
+    cartao.appendChild(resumo);
+  }
+
+  const botao = document.createElement('button');
+  botao.className = 'botao secundario';
+  botao.type = 'button';
+  botao.textContent = 'Conhecer essa história';
+  botao.addEventListener('click', () => mostrarTrajetoria(historia));
+  cartao.appendChild(botao);
+
+  return cartao;
+}
+
+// Estante sem história publicada para o territorio: em vez de mandar o visitante
+// procurar um Skeeler no estande (nao sabemos o volume de gente nem se o time da
+// conta de atender um a um), oferecemos ali mesmo as historias das outras
+// estantes - a historia em destaque fica sempre ao alcance de um toque.
+// So mostramos o convite quando ha o que abrir: link que nao leva a nada e pior
+// do que a mensagem seca.
+async function montarEstanteVazia(lista) {
+  const aviso = document.createElement('p');
+  aviso.className = 'apoio';
+  aviso.textContent = 'As histórias desta estante estão sendo escritas.';
+  lista.appendChild(aviso);
+
+  let outras = [];
+  try {
+    const resposta = await fetch('/api/historias');
+    const corpo = await resposta.json();
+    outras = (corpo.historias || []).filter((historia) => historia.territorio !== estado.territorio);
+  } catch {
+    outras = [];
+  }
+
+  if (outras.length === 0) {
+    aviso.textContent =
+      'As histórias desta estante estão sendo escritas. Volte daqui a pouco para conhecê-las.';
+    return;
+  }
+
+  const convite = document.createElement('button');
+  convite.type = 'button';
+  convite.className = 'link-inline';
+  convite.textContent = 'Veja algumas delas aqui.';
+  convite.addEventListener('click', () => {
+    lista.innerHTML = '';
+
+    const nota = document.createElement('p');
+    nota.className = 'apoio';
+    nota.textContent = 'Enquanto esta estante é escrita, conheça histórias das outras estantes.';
+    lista.appendChild(nota);
+
+    for (const historia of outras) {
+      lista.appendChild(montarCartao(historia));
+    }
+  });
+
+  aviso.append(' ', convite);
 }
 
 function mostrarTrajetoria(historia) {

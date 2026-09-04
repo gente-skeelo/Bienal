@@ -154,7 +154,8 @@ O fluxo implementado:
 ```
 Entrada → Quiz (7 perguntas) → Reveal → Resultado (território)
 → Estante dos Skeelers (3 livros + 3 histórias + 3 trajetórias)
-→ Trajetória do Skeeler → Employer Branding (+ link de oportunidades)
+→ Trajetória do Skeeler → Employer Branding (+ link de oportunidades
+  e selo da Urna de brindes)
 → Estante de Talentos (cadastro obrigatório) → Urna Além da Página
 ```
 
@@ -162,7 +163,14 @@ Entrada → Quiz (7 perguntas) → Reveal → Resultado (território)
 
 As histórias que aparecem no app vêm da tabela `historias` — o `npm run seed`
 insere 9 placeholders (3 por território) e as histórias reais entram depois
-pela API, sem novo deploy:
+pela API, sem novo deploy.
+
+Se o território do resultado ainda não tiver história publicada, a estante não
+manda o visitante procurar um Skeeler no estande (não dá para prever o volume de
+gente nem se o time consegue atender um a um): ela oferece as histórias das
+outras estantes ali mesmo, no convite "Veja algumas delas aqui". O convite só
+aparece quando existe história para abrir.
+
 
 | Método | Rota | O que faz |
 | --- | --- | --- |
