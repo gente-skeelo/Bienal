@@ -158,7 +158,7 @@ O fluxo implementado:
 
 ```
 Entrada → Quiz (7 perguntas) → Reveal → Resultado (território)
-→ Estante dos Skeelers (3 livros + 3 histórias + 3 trajetórias)
+→ Estante dos Skeelers (1 história por território)
 → Trajetória do Skeeler → Employer Branding (+ link de oportunidades
   e selo da Urna de brindes)
 → Estante de Talentos (cadastro obrigatório) → Urna Além da Página
@@ -167,14 +167,14 @@ Entrada → Quiz (7 perguntas) → Reveal → Resultado (território)
 ### Conteúdo parametrizável (Estantes dos Skeelers)
 
 As histórias que aparecem no app vêm da tabela `historias` — o `npm run seed`
-insere 9 placeholders (3 por território) e as histórias reais entram depois
+insere 3 placeholders (1 por território) e as histórias reais entram depois
 pela API, sem novo deploy.
 
-Se o território do resultado ainda não tiver história publicada, a estante não
-manda o visitante procurar um Skeeler no estande (não dá para prever o volume de
-gente nem se o time consegue atender um a um): ela oferece as histórias das
-outras estantes ali mesmo, no convite "Veja algumas delas aqui". O convite só
-aparece quando existe história para abrir.
+Cada história aparece **só na estante do seu território**: a estante de
+Evoluir mostra apenas o que foi cadastrado como `evoluir`, e assim por diante.
+Não há atalho para as outras estantes — com uma única história no banco, ela
+apareceria nas três. Se o território ainda não tiver história ativa, a tela
+avisa que a história está sendo escrita.
 
 
 | Método | Rota | O que faz |
@@ -195,8 +195,9 @@ quadrado e reduz para 320px antes de enviar; máximo 150 mil caracteres),
 (link da indicação no Skeelo — o CTA só aparece quando há link garantido),
 `ordem` e `ativo`.
 
-A seleção final tem **uma história por estante** (3 no total). O app não
-depende disso: a estante lista quantas histórias estiverem ativas.
+A seleção final tem **uma história por estante** (3 no total), e o app
+mostra **só uma**: a primeira ativa do território pela `ordem`. Se houver mais
+de uma cadastrada, é a `ordem` no painel que decide qual aparece.
 
 A leitura é pública (o app monta as estantes com ela); criar, editar e excluir
 exigem `CHAVE_ADMIN` quando a variável está definida.

@@ -271,7 +271,10 @@ async function mostrarEstante() {
     if (estado.historias.length === 0) {
       const resposta = await fetch(`/api/historias?territorio=${estado.territorio}`);
       const corpo = await resposta.json();
-      estado.historias = corpo.historias || [];
+      // Uma historia por estante: a API ja vem ordenada por `ordem`, entao a
+      // primeira ativa e a que aparece. Se houver mais de uma cadastrada, e
+      // a `ordem` no painel que decide.
+      estado.historias = (corpo.historias || []).slice(0, 1);
     }
   } catch {
     estado.historias = [];
@@ -279,7 +282,10 @@ async function mostrarEstante() {
 
   lista.innerHTML = '';
   if (estado.historias.length === 0) {
-    await montarEstanteVazia(lista);
+    // Sem atalho para outras estantes: cada historia aparece so no seu
+    // territorio, senao a unica cadastrada "vaza" para as tres estantes.
+    lista.innerHTML =
+      '<p class="apoio">A história desta estante está sendo escrita. Volte daqui a pouco para conhecê-la.</p>';
     return;
   }
 
@@ -351,53 +357,6 @@ function montarIndicacao(titulo) {
   livro.textContent = titulo;
   bloco.append(rotulo, livro);
   return bloco;
-}
-
-// Estante sem história publicada para o territorio: em vez de mandar o visitante
-// procurar um Skeeler no estande (nao sabemos o volume de gente nem se o time da
-// conta de atender um a um), oferecemos ali mesmo as historias das outras
-// estantes - a historia em destaque fica sempre ao alcance de um toque.
-// So mostramos o convite quando ha o que abrir: link que nao leva a nada e pior
-// do que a mensagem seca.
-async function montarEstanteVazia(lista) {
-  const aviso = document.createElement('p');
-  aviso.className = 'apoio';
-  aviso.textContent = 'As histórias desta estante estão sendo escritas.';
-  lista.appendChild(aviso);
-
-  let outras = [];
-  try {
-    const resposta = await fetch('/api/historias');
-    const corpo = await resposta.json();
-    outras = (corpo.historias || []).filter((historia) => historia.territorio !== estado.territorio);
-  } catch {
-    outras = [];
-  }
-
-  if (outras.length === 0) {
-    aviso.textContent =
-      'As histórias desta estante estão sendo escritas. Volte daqui a pouco para conhecê-las.';
-    return;
-  }
-
-  const convite = document.createElement('button');
-  convite.type = 'button';
-  convite.className = 'link-inline';
-  convite.textContent = 'Veja algumas delas aqui.';
-  convite.addEventListener('click', () => {
-    lista.innerHTML = '';
-
-    const nota = document.createElement('p');
-    nota.className = 'apoio';
-    nota.textContent = 'Enquanto esta estante é escrita, conheça histórias das outras estantes.';
-    lista.appendChild(nota);
-
-    for (const historia of outras) {
-      lista.appendChild(montarCartao(historia));
-    }
-  });
-
-  aviso.append(' ', convite);
 }
 
 function mostrarTrajetoria(historia) {
