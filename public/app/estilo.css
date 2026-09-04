@@ -390,15 +390,15 @@ h3 {
 .skeeler { display: flex; align-items: center; gap: 0.75rem; }
 .skeeler-foto {
   flex: 0 0 auto;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 4rem;
+  height: 4rem;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--acento);
   box-shadow: 0 0 14px var(--brilho);
   background: var(--cartao);
 }
-.skeeler-foto.grande { width: 4.5rem; height: 4.5rem; border-width: 3px; }
+.skeeler-foto.grande { width: 6.5rem; height: 6.5rem; border-width: 4px; }
 .skeeler h2 { line-height: 1.2; }
 
 /* "Indicacao do Skeelo": o livro do acervo, logo abaixo da citacao. Dourado,
