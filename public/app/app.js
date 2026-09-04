@@ -409,13 +409,16 @@ function mostrarTrajetoria(historia) {
 // Employer Branding + Estante de Talentos
 // ---------------------------------------------------------------------------
 
-function mostrarEmployerBranding() {
+// O convite para as vagas so aparece na confirmacao do cadastro: antes disso ele
+// e um link externo (abre outra aba) competindo com a Estante de Talentos, que e
+// o que fecha a experiencia e libera o brinde.
+function mostrarConfirmacaoTalento() {
   const botaoVagas = $('btn-vagas');
   if (URL_OPORTUNIDADES) {
     botaoVagas.href = URL_OPORTUNIDADES;
     botaoVagas.hidden = false;
   }
-  mostrar('tela-eb');
+  mostrar('tela-talentos-ok');
 }
 
 async function enviarTalento(evento) {
@@ -461,7 +464,7 @@ async function enviarTalento(evento) {
     }
     registrar('talent_pool_completed', { territorio: estado.territorio });
     form.reset();
-    mostrar('tela-talentos-ok');
+    mostrarConfirmacaoTalento();
   } catch {
     erro.textContent = 'Não conseguimos salvar agora. Tente de novo.';
     erro.hidden = false;
@@ -503,7 +506,7 @@ function recomecar() {
 $('btn-comecar').addEventListener('click', comecarQuiz);
 $('btn-estante').addEventListener('click', mostrarEstante);
 $('btn-voltar-estante').addEventListener('click', () => mostrar('tela-estante'));
-$('btn-eb').addEventListener('click', mostrarEmployerBranding);
+$('btn-eb').addEventListener('click', () => mostrar('tela-eb'));
 $('btn-vagas').addEventListener('click', () => registrar('careers_clicked', { territorio: estado.territorio }));
 $('btn-talentos').addEventListener('click', () => {
   registrar('talent_pool_clicked', { territorio: estado.territorio });
