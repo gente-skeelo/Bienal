@@ -292,6 +292,7 @@ async function carregarTalentos() {
       talento.telefone || '—',
       talento.area_interesse || '—',
       talento.territorio ? TERRITORIOS[talento.territorio] : '—',
+      talento.maioridade ? 'sim' : '—',
     ];
     for (const texto of celulas) {
       const celula = document.createElement('td');
@@ -325,7 +326,7 @@ async function carregarTalentos() {
 }
 
 $('btn-csv-talentos').addEventListener('click', () => {
-  const cabecalho = ['nome', 'email', 'telefone', 'area_interesse', 'territorio', 'linkedin', 'mensagem', 'consentimento', 'criado_em'];
+  const cabecalho = ['nome', 'email', 'telefone', 'area_interesse', 'territorio', 'linkedin', 'mensagem', 'maioridade', 'consentimento', 'criado_em'];
   const escapar = (valor) => `"${String(valor ?? '').replaceAll('"', '""')}"`;
   const linhas = [cabecalho.join(';'), ...talentos.map((t) => cabecalho.map((c) => escapar(t[c])).join(';'))];
   const blob = new Blob(['﻿' + linhas.join('\n')], { type: 'text/csv;charset=utf-8' });

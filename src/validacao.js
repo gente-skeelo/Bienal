@@ -216,7 +216,7 @@ function validarTalento(corpo) {
     return { erros: ['O corpo da requisicao precisa ser um objeto JSON.'] };
   }
 
-  const campos = ['nome', 'email', 'telefone', 'area_interesse', 'linkedin', 'mensagem', 'territorio', 'consentimento'];
+  const campos = ['nome', 'email', 'telefone', 'area_interesse', 'linkedin', 'mensagem', 'territorio', 'maioridade', 'consentimento'];
   const desconhecidos = Object.keys(corpo).filter((campo) => !campos.includes(campo));
   if (desconhecidos.length > 0) {
     erros.push(`Campos nao reconhecidos: ${desconhecidos.join(', ')}.`);
@@ -240,6 +240,15 @@ function validarTalento(corpo) {
     erros.push('consentimento precisa ser true para entrar na Estante de Talentos.');
   } else {
     dados.consentimento = true;
+  }
+
+  // O consentimento so e valido se quem o da tem capacidade civil: por isso a
+  // declaracao de 18+ e obrigatoria e fica gravada junto do cadastro. Sem
+  // registro, a declaracao nao serve de nada depois.
+  if (corpo.maioridade !== true) {
+    erros.push('maioridade precisa ser true: a Estante de Talentos e para maiores de 18 anos.');
+  } else {
+    dados.maioridade = true;
   }
 
   for (const campo of ['telefone', 'area_interesse', 'linkedin', 'mensagem']) {

@@ -113,6 +113,7 @@ body::before {
   .tela, .livro-animado, .capa, .livro-hero svg { animation: none; }
   .urna-ilustracao svg, .urna-bilhete, .urna-fagulhas { animation: none; }
   .vale svg, .vale-fagulhas { animation: none; }
+  .confete { display: none; }
   .capa::after { animation: none; }
   .fagulhas i { animation: none; opacity: 0.35; }
 }
@@ -506,6 +507,10 @@ form input:focus, form textarea:focus { outline: 2px solid var(--acento); border
 
 .erro { color: #ffb4a8; font-size: 0.9rem; }
 
+/* Canal de remocao dos dados (LGPD): informativo, fora do rotulo do checkbox. */
+.nota-dados { font-size: 0.8rem; color: var(--texto-suave); }
+.nota-dados a { color: var(--lima); }
+
 /* Vale do livro: aparece na confirmacao do cadastro, como imagem do que a
    pessoa acabou de garantir. O voucher de verdade chega por e-mail. */
 .vale { display: flex; justify-content: center; }
@@ -529,6 +534,48 @@ form input:focus, form textarea:focus { outline: 2px solid var(--acento); border
   fill: #02271c;
 }
 .vale-fagulhas { animation: urna-fagulhas 2.4s ease-in-out infinite; }
+
+/* Tela final: a urna maior e o confete caindo - a experiencia terminou e a
+   pessoa ganhou a chance, entao a tela comemora em vez de so informar. */
+.urna-festa { display: flex; justify-content: center; }
+.urna-festa svg { width: 8rem; }
+
+#tela-urna { position: relative; overflow: hidden; }
+.confete { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.confete i {
+  position: absolute;
+  top: 0;
+  width: 0.45rem;
+  height: 0.7rem;
+  border-radius: 1px;
+  opacity: 0;
+  animation-name: confete-cai;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes confete-cai {
+  0%   { transform: translate3d(0, -10vh, 0) rotate(0deg); opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translate3d(0, 105vh, 0) rotate(760deg); opacity: 0; }
+}
+.confete i:nth-child(1) { left: 6%; background: var(--dourado); animation-duration: 3.4s; animation-delay: 0s; }
+.confete i:nth-child(2) { left: 14%; background: var(--lima); animation-duration: 4.1s; animation-delay: 0.7s; }
+.confete i:nth-child(3) { left: 22%; background: var(--verde-marca); animation-duration: 3.7s; animation-delay: 1.4s; }
+.confete i:nth-child(4) { left: 31%; background: var(--dourado); animation-duration: 4.4s; animation-delay: 0.3s; }
+.confete i:nth-child(5) { left: 39%; background: var(--lima); animation-duration: 3.2s; animation-delay: 2.1s; }
+.confete i:nth-child(6) { left: 47%; background: var(--verde-marca); animation-duration: 4.0s; animation-delay: 1.0s; }
+.confete i:nth-child(7) { left: 55%; background: var(--dourado); animation-duration: 3.6s; animation-delay: 2.6s; }
+.confete i:nth-child(8) { left: 63%; background: var(--lima); animation-duration: 4.3s; animation-delay: 0.5s; }
+.confete i:nth-child(9) { left: 71%; background: var(--verde-marca); animation-duration: 3.5s; animation-delay: 1.8s; }
+.confete i:nth-child(10) { left: 79%; background: var(--dourado); animation-duration: 4.1s; animation-delay: 1.2s; }
+.confete i:nth-child(11) { left: 87%; background: var(--lima); animation-duration: 3.8s; animation-delay: 2.9s; }
+.confete i:nth-child(12) { left: 94%; background: var(--verde-marca); animation-duration: 4.5s; animation-delay: 0.9s; }
+.confete i:nth-child(13) { left: 35%; background: var(--dourado); animation-duration: 4.7s; animation-delay: 3.4s; }
+.confete i:nth-child(14) { left: 68%; background: var(--lima); animation-duration: 3.9s; animation-delay: 3.8s; }
+
+/* O conteudo fica na frente do confete. */
+#tela-urna .miolo, #tela-urna .acoes { position: relative; z-index: 1; }
 
 /* Urna: o fechamento em dourado - o mesmo fio do Bilhete Dourado. */
 body.final .livro-animado { filter: drop-shadow(0 0 24px rgba(240, 207, 125, 0.75)); }

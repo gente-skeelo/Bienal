@@ -435,11 +435,17 @@ async function enviarTalento(evento) {
     linkedin: form.linkedin.value.trim() || null,
     mensagem: form.mensagem.value.trim() || null,
     territorio: estado.territorio,
+    maioridade: form.maioridade.checked,
     consentimento: form.consentimento.checked,
   };
 
   if (!dados.nome || !dados.email) {
     erro.textContent = 'Precisamos do seu nome e e-mail para manter contato.';
+    erro.hidden = false;
+    return;
+  }
+  if (!dados.maioridade) {
+    erro.textContent = 'A Estante de Talentos é para maiores de 18 anos. Passe no estande para conhecer as histórias com a gente.';
     erro.hidden = false;
     return;
   }

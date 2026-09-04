@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS talentos (
   linkedin       TEXT,
   mensagem       TEXT,   -- "conte um pouco sobre sua trajetoria"
   territorio     TEXT    CHECK (territorio IN ('aprender', 'evoluir', 'imaginar')),
+  maioridade     BOOLEAN,  -- declaracao de 18+ feita no formulario
   consentimento  BOOLEAN NOT NULL,
   criado_em      TIMESTAMPTZ NOT NULL DEFAULT now(),
   atualizado_em  TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -58,6 +59,7 @@ CREATE TABLE IF NOT EXISTS talentos (
 -- Coluna adicionada depois do primeiro deploy: o CREATE TABLE acima so vale
 -- para banco novo, entao bancos que ja existiam precisam do ALTER.
 ALTER TABLE talentos ADD COLUMN IF NOT EXISTS telefone TEXT;
+ALTER TABLE talentos ADD COLUMN IF NOT EXISTS maioridade BOOLEAN;
 
 -- Quem se inscreve duas vezes atualiza o proprio cadastro em vez de duplicar.
 CREATE UNIQUE INDEX IF NOT EXISTS talentos_email_idx ON talentos (lower(email));

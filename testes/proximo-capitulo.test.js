@@ -163,6 +163,16 @@ test('POST /api/talentos exige nome, email valido e consentimento', async () => 
   assert.ok(corpo.erros.some((e) => e.includes('nome')));
   assert.ok(corpo.erros.some((e) => e.includes('email')));
   assert.ok(corpo.erros.some((e) => e.includes('consentimento')));
+  assert.ok(corpo.erros.some((e) => e.includes('maioridade')));
+});
+
+test('POST /api/talentos recusa quem nao declara 18 anos ou mais', async () => {
+  const { status, corpo } = await req('/api/talentos', {
+    method: 'POST',
+    corpo: { nome: 'Menor', email: 'menor@exemplo.com', consentimento: true, maioridade: false },
+  });
+  assert.equal(status, 400);
+  assert.ok(corpo.erros.some((e) => e.includes('maioridade')));
 });
 
 test('POST /api/talentos cria e reinscricao com o mesmo e-mail atualiza', async () => {
@@ -174,6 +184,7 @@ test('POST /api/talentos cria e reinscricao com o mesmo e-mail atualiza', async 
       telefone: '(11) 91234-5678',
       area_interesse: 'Produto',
       territorio: 'imaginar',
+      maioridade: true,
       consentimento: true,
     },
   });
@@ -182,12 +193,13 @@ test('POST /api/talentos cria e reinscricao com o mesmo e-mail atualiza', async 
 
   const segunda = await req('/api/talentos', {
     method: 'POST',
-    corpo: { nome: 'Visitante Silva', email: 'visitante@exemplo.com', consentimento: true },
+    corpo: { nome: 'Visitante Silva', email: 'visitante@exemplo.com', consentimento: true, maioridade: true },
   });
   assert.equal(segunda.status, 200); // atualizou em vez de duplicar
   assert.equal(segunda.corpo.nome, 'Visitante Silva');
   assert.equal(segunda.corpo.area_interesse, 'Produto'); // preservado
   assert.equal(segunda.corpo.telefone, '(11) 91234-5678'); // preservado
+  assert.equal(segunda.corpo.maioridade, true);
   assert.equal(segunda.corpo.territorio, 'imaginar'); // preservado
 
   const lista = await req('/api/talentos');
