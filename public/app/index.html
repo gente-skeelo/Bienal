@@ -181,13 +181,9 @@
         <p class="apoio">Você conheceu alguns capítulos de quem constrói o Skeelo hoje. No final da experiência você vai ter uma surpresa!</p>
         <p class="apoio">Nossa missão é ampliar o lugar da leitura na vida das pessoas — e ela é escrita todos os dias por quem trabalha aqui.</p>
         <h3 class="pergunta-eb">E qual pode ser o seu próximo capítulo?</h3>
-      </div>
-      <div class="acoes">
-        <button class="botao principal" id="btn-talentos">Fazer parte da Estante de Talentos</button>
-        <a class="botao secundario" id="btn-vagas" target="_blank" rel="noopener" hidden>Conhecer oportunidades no Skeelo</a>
 
-        <!-- Selo da Urna de brindes: a imagem que o visitante mostra para o time
-             que fica com a urna no estande. Dourado, como o Bilhete Dourado. -->
+        <!-- Selo da Urna de brindes: cartao horizontal logo acima dos CTAs, para
+             os dois botoes ficarem juntos. A urna balanca de leve (ver estilo.css). -->
         <div class="selo-urna">
           <div class="urna-ilustracao">
             <svg viewBox="0 0 140 132" role="img" aria-labelledby="urna-svg-titulo">
@@ -216,12 +212,14 @@
               </g>
 
               <!-- Bilhete dourado entrando na fenda. -->
-              <g transform="rotate(-9 70 24)">
-                <rect x="52" y="8" width="36" height="36" rx="4" fill="url(#urna-ouro)"/>
-                <g stroke="#7a5714" stroke-width="2.2" stroke-linecap="round" opacity="0.5">
-                  <path d="M59 18 h22"/>
-                  <path d="M59 25 h22"/>
-                  <path d="M59 32 h13"/>
+              <g class="urna-bilhete">
+                <g transform="rotate(-9 70 24)">
+                  <rect x="52" y="8" width="36" height="36" rx="4" fill="url(#urna-ouro)"/>
+                  <g stroke="#7a5714" stroke-width="2.2" stroke-linecap="round" opacity="0.5">
+                    <path d="M59 18 h22"/>
+                    <path d="M59 25 h22"/>
+                    <path d="M59 32 h13"/>
+                  </g>
                 </g>
               </g>
 
@@ -240,18 +238,23 @@
               <rect x="32" y="114" width="76" height="13" rx="5" fill="url(#urna-ouro)"/>
 
               <!-- Fagulhas douradas. -->
-              <g fill="#f0cf7d">
+              <g class="urna-fagulhas" fill="#f0cf7d">
                 <path d="M22 24 l2.4 5.2 5.2 2.4 -5.2 2.4 -2.4 5.2 -2.4 -5.2 -5.2 -2.4 5.2 -2.4 Z"/>
                 <path d="M117 32 l1.9 4.1 4.1 1.9 -4.1 1.9 -1.9 4.1 -1.9 -4.1 -4.1 -1.9 4.1 -1.9 Z"/>
                 <path d="M118 86 l1.6 3.5 3.5 1.6 -3.5 1.6 -1.6 3.5 -1.6 -3.5 -3.5 -1.6 3.5 -1.6 Z"/>
               </g>
             </svg>
           </div>
-          <p class="selo-urna-titulo">Urna de brindes</p>
-          <p class="nota">O cadastro na estante garante seu brinde aqui no estande. O voucher do livro de presente chega depois, por e-mail.</p>
-          <p class="nota">Mostre esta tela para o time da urna para retirar o seu.</p>
+          <div class="selo-urna-texto">
+            <p class="selo-urna-titulo">Urna de brindes</p>
+            <p class="nota">O cadastro na estante garante seu brinde aqui no estande.</p>
+            <p class="nota">O voucher do livro de presente chega depois, por e-mail.</p>
+          </div>
         </div>
       </div>
+      <div class="acoes">
+        <button class="botao principal" id="btn-talentos">Fazer parte da Estante de Talentos</button>
+        <a class="botao secundario" id="btn-vagas" target="_blank" rel="noopener" hidden>Conhecer oportunidades no Skeelo</a>      </div>
     </section>
 
     <!-- TELA 14 | Estante de Talentos -->
