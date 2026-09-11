@@ -19,6 +19,7 @@
       <button class="menu-item ativo" data-secao="historias">Histórias</button>
       <button class="menu-item" data-secao="talentos">Talentos</button>
       <button class="menu-item" data-secao="metricas">Métricas</button>
+      <button class="menu-item" data-secao="qrcode">QR Code</button>
       <button class="menu-item" data-secao="config">Configurações</button>
     </nav>
   </header>
@@ -140,6 +141,56 @@
       <div id="metricas-historias" class="cartoes"></div>
     </section>
 
+    <!-- ============ QR CODE ============ -->
+    <!-- O QR Code do estande: gerado aqui, no navegador, a partir da URL do app.
+         Sem serviço externo - o código nunca depende de internet de terceiros
+         nem expira. O cartaz sai na impressão (Ctrl+P) em A4. -->
+    <section class="secao" id="secao-qrcode" hidden>
+      <div class="painel-form nao-imprimir">
+        <h2>QR Code do app</h2>
+        <p class="apoio">Este é o código que leva o visitante para a experiência
+          <a href="/app/" target="_blank" rel="noopener">Próximo Capítulo</a>. Confira a URL
+          antes de mandar imprimir: ela precisa ser a URL pública do app.</p>
+        <label>URL do app
+          <input type="url" id="qr-url" spellcheck="false" autocomplete="off">
+        </label>
+        <div class="linha">
+          <button class="botao secundario mini" id="btn-qr-padrao" type="button">Usar a URL deste servidor</button>
+        </div>
+        <p class="erro" id="qr-erro" hidden></p>
+      </div>
+
+      <div class="qr-area nao-imprimir">
+        <div class="qr-quadro" id="qr-quadro"></div>
+        <div class="qr-lado">
+          <h2>Levar para o estande</h2>
+          <p class="apoio">O SVG é vetor: amplia para banner, totem ou adesivo sem
+            perder nitidez. O PNG serve para slide, Slack e e-mail.</p>
+          <div class="linha">
+            <button class="botao principal" id="btn-qr-svg" type="button">Baixar SVG</button>
+            <button class="botao secundario" id="btn-qr-png" type="button">Baixar PNG</button>
+            <button class="botao secundario" id="btn-qr-imprimir" type="button">Imprimir cartaz</button>
+          </div>
+          <p class="apoio">Antes de imprimir em escala: teste o código com dois
+            celulares (um Android, um iPhone). Imprima com no mínimo 4 cm de lado
+            para leitura a um braço de distância — e mantenha a margem branca em volta.</p>
+        </div>
+      </div>
+
+      <!-- Cartaz A4 do estande: prévia na tela, folha inteira na impressão. -->
+      <div class="cartaz-previa">
+        <div class="cartaz" id="cartaz">
+          <p class="cartaz-marca">Skeelo <span>·</span> Bienal 2026</p>
+          <h2 class="cartaz-titulo">Qual é o seu <em>próximo capítulo</em> profissional?</h2>
+          <p class="cartaz-apoio">Descubra em menos de 1 minuto.</p>
+          <div class="cartaz-qr" id="cartaz-qr"></div>
+          <p class="cartaz-instrucao">Aponte a câmera do celular</p>
+          <p class="cartaz-url" id="cartaz-url"></p>
+          <p class="cartaz-brinde">🎁 Complete a experiência e ganhe um brinde no estande</p>
+        </div>
+      </div>
+    </section>
+
     <!-- ============ CONFIGURAÇÕES ============ -->
     <section class="secao" id="secao-config" hidden>
       <form class="painel-form" id="form-config">
@@ -153,13 +204,14 @@
 
       <div class="painel-form">
         <h2>Acesso</h2>
-        <p class="apoio">O app dos visitantes fica em <a href="/app/" target="_blank" rel="noopener">/app/</a> — é para lá que o QR Code do estande deve apontar.</p>
+        <p class="apoio">O app dos visitantes fica em <a href="/app/" target="_blank" rel="noopener">/app/</a> — é para lá que o QR Code do estande aponta. Gere e imprima o código na aba <strong>QR Code</strong>.</p>
         <p class="apoio">Chave de acesso deste painel: definida pela variável <code>CHAVE_ADMIN</code> no servidor (Railway → Variables). <button class="link" id="btn-trocar-chave" type="button">Trocar a chave salva neste navegador</button></p>
       </div>
     </section>
 
   </main>
 
+  <script src="vendor/qrcode.js"></script>
   <script src="admin.js"></script>
 </body>
 </html>
