@@ -215,3 +215,92 @@ tbody tr:last-child td { border-bottom: 0; }
 .funil-trilho { background: var(--cartao); border-radius: 999px; height: 1rem; overflow: hidden; }
 .funil-barra { background: var(--acento); height: 100%; border-radius: 999px; }
 .funil-valor { text-align: right; font-weight: 700; }
+
+/* ------------------------------------------------------------------------- */
+/* QR Code do estande                                                         */
+/* ------------------------------------------------------------------------- */
+
+.qr-area {
+  display: grid;
+  grid-template-columns: 18rem 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  margin: 1rem 0;
+}
+@media (max-width: 48rem) { .qr-area { grid-template-columns: 1fr; } }
+
+/* O QR sempre sobre branco, com a zona de silencio ja embutida no SVG: e o
+   contraste que o leitor espera, mesmo com o painel em fundo escuro. */
+.qr-quadro {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 0.75rem;
+  line-height: 0;
+}
+.qr-quadro svg { display: block; width: 100%; height: auto; border-radius: 0.5rem; }
+
+.qr-lado { display: flex; flex-direction: column; gap: 0.9rem; }
+.qr-lado h2 { margin: 0; }
+
+/* Aviso (URL local, por exemplo): amarelo, nao vermelho - nada quebrou ainda. */
+.erro.aviso { color: #fbbf24; }
+
+/* --- Cartaz A4 ----------------------------------------------------------- */
+/* Na tela e uma previa fiel; na impressao ocupa a folha inteira. As medidas de
+   dentro sao em "em" sobre um corpo em cqi, entao a mesma marcacao serve para a
+   previa de 20rem e para a folha A4 sem ajuste manual. */
+.cartaz-previa {
+  container-type: inline-size;
+  max-width: 26rem;
+  margin: 1.5rem 0;
+}
+
+.cartaz {
+  aspect-ratio: 210 / 297;
+  background: #ffffff;
+  color: #03150f;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  font-size: 3.2cqi;
+  padding: 2em 1.6em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.cartaz-marca { font-size: 0.85em; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.cartaz-marca span { color: #00a86f; }
+
+.cartaz-titulo { font-size: 1.9em; line-height: 1.15; margin: 0.6em 0 0; max-width: 11em; }
+.cartaz-titulo em { font-style: normal; color: #00a86f; }
+
+.cartaz-apoio { font-size: 0.95em; color: #3d5a4e; margin-top: 0.6em; }
+
+.cartaz-qr { width: 62%; line-height: 0; margin: 0.6em 0; }
+.cartaz-qr svg { display: block; width: 100%; height: auto; }
+
+.cartaz-instrucao { font-size: 1.15em; font-weight: 800; }
+.cartaz-url { font-size: 0.8em; color: #3d5a4e; word-break: break-all; margin-top: 0.3em; }
+
+.cartaz-brinde {
+  font-size: 0.85em;
+  font-weight: 700;
+  margin-top: 1em;
+  padding: 0.6em 1em;
+  border: 0.12em solid #00a86f;
+  border-radius: 999px;
+}
+
+/* --- Impressao: so o cartaz, na folha inteira ---------------------------- */
+@page { size: A4 portrait; margin: 0; }
+
+@media print {
+  body { background: #ffffff; }
+  body::before { display: none; }
+  .topo, .aviso-chave, .nao-imprimir, .secao:not(#secao-qrcode) { display: none !important; }
+  main { max-width: none; padding: 0; }
+  .cartaz-previa { max-width: none; margin: 0; width: 100vw; }
+  .cartaz { aspect-ratio: auto; height: 100vh; border-radius: 0; font-size: 6.2mm; }
+}

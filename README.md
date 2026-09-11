@@ -148,11 +148,35 @@ código nem fazer deploy:
 - **Talentos** — ver quem entrou na Estante de Talentos e baixar CSV;
 - **Métricas** — o funil da experiência (visitantes únicos por evento),
   distribuição de territórios e histórias mais vistas;
+- **QR Code** — gera o código do estande e o cartaz para impressão
+  (ver abaixo);
 - **Configurações** — o link do botão "Conhecer oportunidades no Skeelo"
   (vazio = botão oculto no app).
 
 Com `CHAVE_ADMIN` definida no ambiente, o painel pede a chave uma vez e a
 guarda no navegador.
+
+### QR Code do estande
+
+A aba **QR Code** do painel gera o código que leva o visitante para `/app/`:
+
+- o campo vem preenchido com a URL do próprio servidor (`.../app/`) e pode ser
+  trocado — útil se o estande usar domínio próprio ou link com UTM;
+- **Baixar SVG** (vetor, sai com 80 mm e amplia para banner, totem ou adesivo
+  sem perder nitidez), **Baixar PNG** (1600 px, para slide, Slack e e-mail) e
+  **Imprimir cartaz** (`Ctrl+P` → folha A4 pronta, só o cartaz vai para o
+  papel);
+- o código é gerado no navegador pela biblioteca `public/admin/vendor/qrcode.js`
+  ([qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator), MIT).
+  Nada de encurtador ou gerador online: um QR impresso vive semanas e não pode
+  depender de um serviço de terceiros que sai do ar, passa a cobrar ou expira.
+
+Detalhes que decidem se o código funciona no corredor da Bienal: correção de
+erro **Q** (lê mesmo amassado, com reflexo ou parcialmente coberto), margem
+branca de 4 módulos embutida no arquivo e **mínimo de 4 cm de lado** na
+impressão. O painel avisa quando a URL é local (`localhost`) — o erro clássico
+da véspera do evento. Antes de mandar para a gráfica, escaneie com um Android e
+um iPhone.
 
 O fluxo implementado:
 
@@ -264,6 +288,7 @@ src/rotas/metricas.js            /api/metricas (analytics essenciais)
 src/rotas/config.js              /api/config (configurações ajustáveis pelo painel)
 public/app/                      o app "Próximo Capítulo" (HTML + CSS + JS puros)
 public/admin/                    o painel de gestão em /admin
+public/admin/vendor/qrcode.js    gerador de QR Code (qrcode-generator, MIT)
 testes/api.test.js               testes de integração da programação
 testes/proximo-capitulo.test.js  testes de integração do app
 ```

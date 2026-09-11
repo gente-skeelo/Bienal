@@ -58,6 +58,7 @@ const CARREGADORES = {
   historias: carregarHistorias,
   talentos: carregarTalentos,
   metricas: carregarMetricas,
+  qrcode: carregarQrcode,
   config: carregarConfig,
 };
 
@@ -512,6 +513,169 @@ $('form-config').addEventListener('submit', async (evento) => {
     erro.style.color = '';
     erro.hidden = false;
   }
+});
+
+// ---------------------------------------------------------------------------
+// QR Code do estande
+// ---------------------------------------------------------------------------
+// O codigo e gerado aqui, no navegador (lib vendorizada em vendor/qrcode.js).
+// Nada de encurtador ou gerador online: um QR impresso vive semanas e nao pode
+// depender de um servico de terceiros que sai do ar, passa a cobrar ou expira.
+
+// 'Q' corrige ate 25% do codigo danificado - no estande o cartaz amassa, pega
+// reflexo e e lido de longe. Para uma URL deste tamanho o nivel Q cabe na mesma
+// grade que o 'M', entao a robustez sai de graca.
+const QR_CORRECAO = 'Q';
+// Zona de silencio: a especificacao pede 4 modulos de margem clara em volta.
+// Sem ela, muito leitor simplesmente nao enxerga o codigo.
+const QR_MARGEM = 4;
+
+let qrAtual = null; // { url, tamanho, modulos: boolean[][] }
+
+function urlPadraoDoApp() {
+  return new URL('/app/', location.href).href;
+}
+
+function calcularQr(url) {
+  const codigo = qrcode(0, QR_CORRECAO); // 0 = escolhe a menor versao que couber
+  codigo.addData(url);
+  codigo.make();
+  const tamanho = codigo.getModuleCount();
+  const modulos = [];
+  for (let linha = 0; linha < tamanho; linha += 1) {
+    const celulas = [];
+    for (let coluna = 0; coluna < tamanho; coluna += 1) celulas.push(codigo.isDark(linha, coluna));
+    modulos.push(celulas);
+  }
+  return { url, tamanho, modulos };
+}
+
+// Um unico <path> com um quadrado por modulo escuro: arquivo pequeno e sem
+// costura entre os modulos (emenda vira borrao na impressao).
+function caminhoDoQr(qr) {
+  const partes = [];
+  for (let linha = 0; linha < qr.tamanho; linha += 1) {
+    for (let coluna = 0; coluna < qr.tamanho; coluna += 1) {
+      if (qr.modulos[linha][coluna]) {
+        partes.push(`M${coluna + QR_MARGEM} ${linha + QR_MARGEM}h1v1h-1z`);
+      }
+    }
+  }
+  return partes.join('');
+}
+
+// Na tela o SVG ocupa o espaco que recebe (100%); no arquivo baixado ele leva
+// um tamanho fisico em milimetros, para chegar na grafica ja com escala - e com
+// o viewBox intacto, entao continua ampliavel para banner sem perder nitidez.
+function svgDoQr(qr, { paraArquivo = false } = {}) {
+  const lado = qr.tamanho + QR_MARGEM * 2;
+  const medida = paraArquivo ? 'width="80mm" height="80mm"' : 'width="100%" height="100%"';
+  return [
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${lado} ${lado}"`,
+    ` ${medida} shape-rendering="crispEdges" role="img"`,
+    ` aria-label="QR Code para ${qr.url}">`,
+    `<rect width="${lado}" height="${lado}" fill="#ffffff"/>`,
+    `<path d="${caminhoDoQr(qr)}" fill="#03150f"/>`,
+    '</svg>',
+  ].join('');
+}
+
+function baixarArquivo(nome, blob) {
+  const endereco = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = endereco;
+  link.download = nome;
+  link.click();
+  URL.revokeObjectURL(endereco);
+}
+
+function mostrarQr() {
+  const erro = $('qr-erro');
+  const url = $('qr-url').value.trim();
+  erro.hidden = true;
+  erro.classList.remove('aviso');
+
+  if (!url) {
+    qrAtual = null;
+    $('qr-quadro').innerHTML = '';
+    $('cartaz-qr').innerHTML = '';
+    $('cartaz-url').textContent = '';
+    erro.textContent = 'Informe a URL do app.';
+    erro.hidden = false;
+    return;
+  }
+
+  try {
+    qrAtual = calcularQr(url);
+  } catch (e) {
+    qrAtual = null;
+    $('qr-quadro').innerHTML = '';
+    $('cartaz-qr').innerHTML = '';
+    erro.textContent = 'Nao foi possivel gerar o codigo para esta URL.';
+    erro.hidden = false;
+    return;
+  }
+
+  const svg = svgDoQr(qrAtual);
+  $('qr-quadro').innerHTML = svg;
+  $('cartaz-qr').innerHTML = svg;
+  // No cartaz a URL aparece sem o "https://": quem digita no lugar de escanear
+  // nao precisa do protocolo, e a linha fica mais curta e legivel de longe.
+  $('cartaz-url').textContent = url.replace(/^https?:\/\//, '');
+
+  // Um QR impresso apontando para localhost e o erro classico da vespera do
+  // evento: avisa antes de alguem mandar para a grafica.
+  const hospedeiro = (() => { try { return new URL(url).hostname; } catch { return ''; } })();
+  if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(hospedeiro) || hospedeiro.endsWith('.local')) {
+    erro.textContent = 'Atencao: esta e uma URL local, que so abre neste computador. Troque pela URL publica antes de imprimir.';
+    erro.classList.add('aviso');
+    erro.hidden = false;
+  }
+}
+
+async function carregarQrcode() {
+  if (!$('qr-url').value.trim()) $('qr-url').value = urlPadraoDoApp();
+  mostrarQr();
+}
+
+$('qr-url').addEventListener('input', mostrarQr);
+
+$('btn-qr-padrao').addEventListener('click', () => {
+  $('qr-url').value = urlPadraoDoApp();
+  mostrarQr();
+});
+
+$('btn-qr-svg').addEventListener('click', () => {
+  if (!qrAtual) return;
+  const conteudo = `<?xml version="1.0" encoding="UTF-8"?>\n${svgDoQr(qrAtual, { paraArquivo: true })}`;
+  baixarArquivo('qrcode-proximo-capitulo.svg', new Blob([conteudo], { type: 'image/svg+xml' }));
+});
+
+$('btn-qr-png').addEventListener('click', () => {
+  if (!qrAtual) return;
+  const lado = qrAtual.tamanho + QR_MARGEM * 2;
+  // Modulo inteiro em pixels: modulo quebrado vira borda cinza e leitor ruim.
+  const escala = Math.max(1, Math.floor(1600 / lado));
+  const tela = document.createElement('canvas');
+  tela.width = lado * escala;
+  tela.height = lado * escala;
+  const pincel = tela.getContext('2d');
+  pincel.fillStyle = '#ffffff';
+  pincel.fillRect(0, 0, tela.width, tela.height);
+  pincel.fillStyle = '#03150f';
+  for (let linha = 0; linha < qrAtual.tamanho; linha += 1) {
+    for (let coluna = 0; coluna < qrAtual.tamanho; coluna += 1) {
+      if (qrAtual.modulos[linha][coluna]) {
+        pincel.fillRect((coluna + QR_MARGEM) * escala, (linha + QR_MARGEM) * escala, escala, escala);
+      }
+    }
+  }
+  tela.toBlob((blob) => baixarArquivo('qrcode-proximo-capitulo.png', blob), 'image/png');
+});
+
+$('btn-qr-imprimir').addEventListener('click', () => {
+  if (!qrAtual) return;
+  window.print();
 });
 
 // ---------------------------------------------------------------------------
